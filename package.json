@@ -1,0 +1,20 @@
+{
+  "name": "rete-context-menu-plugin",
+  "version": "0.1.0",
+  "description": "",
+  "main": "build/index.js",
+  "scripts": {
+    "build": "rollup -c"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "alight": "^0.14.1"
+  },
+  "devDependencies": {
+    "rollup": "^0.59.2",
+    "rollup-plugin-babel": "^3.0.4",
+    "rollup-plugin-pug": "^0.1.6",
+    "rollup-plugin-sass": "^0.6.1"
+  }
+}
