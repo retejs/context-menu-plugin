@@ -32,7 +32,7 @@ class ComponentItems {
     }
 }
 
-export function install(editor, { searchBar = true }) {
+function install(editor, { searchBar = true }) {
     const nodeItems = new NodeItems(editor);
     const compItems = new ComponentItems(editor);
     const menu = new ContextMenu;
@@ -65,4 +65,8 @@ export function install(editor, { searchBar = true }) {
 
         menu.hide();
     });
+}
+
+export default {
+    install
 }
