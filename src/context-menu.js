@@ -4,14 +4,11 @@ import template from './menu.pug';
 export function Item(scope, el, expression, env) {
     var l = env.changeDetector.locals;
     var item = l.subitem || l.item;
-    var haveSubitems = item.constructor === Object;
 
     el.addEventListener('click', e => {
-        if (!haveSubitems)
-            this.onClick(item);
+        this.onClick(item);
         e.stopPropagation();
     });
-    // .classed('have-subitems', haveSubitems);
 }
 
 export class ContextMenu {
@@ -41,27 +38,8 @@ export class ContextMenu {
 
     searchItems(filter) {
         var regex = new RegExp(filter, 'i'); 
-        var items = {};
-
-        Object.keys(this.items).forEach(key => {
-            var item = this.items[key];
-
-            if (item.constructor === Object) {
-                var subitems = Object.keys(item).filter(subitem => regex.test(subitem))
-
-                if (subitems.length > 0) {
-                    items[key] = {};
-                    subitems.forEach(sumitem => {
-                        items[key][sumitem] = item[sumitem];
-                    });
-                }
-            }
-            
-            if (regex.test(key))
-                items[key] = item;
-        });
-
-        return items;
+        
+        return this.items.filter(key => regex.test(key));
     }
 
     haveSubitems(item) {

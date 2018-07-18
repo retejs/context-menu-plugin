@@ -53,11 +53,11 @@ function install(editor, { searchBar = true }) {
         e.preventDefault();
         e.stopPropagation();
         const [x, y] = [e.clientX, e.clientY];
-        
+
         if (node)
             menu.show(x, y, nodeItems.items, false, item => (menu.hide(), nodeItems.onClick(node, item)))
         else
-            menu.show(x, y, compItems.items, searchBar, item => (menu.hide(), compItems.onClick(mouse, item)))
+            menu.show(x, y, Object.keys(compItems.items), searchBar, key => (menu.hide(), compItems.onClick(mouse, compItems.items[key])))
     });
 
     editor.on('click', ({ e, container }) => {
