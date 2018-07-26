@@ -5,13 +5,13 @@ class NodeItems {
     constructor(editor) {
         this.editor = editor;
         this.items = {
-            'Remove': 'remove'
+            'Remove': 'Remove'
         };
     }
 
     onClick(node, item) {
         switch (item) {
-        case 'remove': this.editor.removeNode(node); break;    
+        case 'Remove': this.editor.removeNode(node); break;    
         default: break;    
         }
     }
@@ -55,7 +55,7 @@ function install(editor, { searchBar = true }) {
         const [x, y] = [e.clientX, e.clientY];
 
         if (node)
-            menu.show(x, y, nodeItems.items, false, item => (menu.hide(), nodeItems.onClick(node, item)))
+            menu.show(x, y, Object.keys(nodeItems.items), false, item => (menu.hide(), nodeItems.onClick(node, item)))
         else
             menu.show(x, y, Object.keys(compItems.items), searchBar, key => (menu.hide(), compItems.onClick(mouse, compItems.items[key])))
     });
