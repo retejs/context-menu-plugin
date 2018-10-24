@@ -1,47 +1,37 @@
-import './index.sass';
-import { ContextMenu } from './context-menu';
+import Menu from './Menu.vue';
+import Vue from 'vue';
 
-class NodeItems {
-    constructor(editor) {
-        this.editor = editor;
-        this.items = {
-            'Remove': 'Remove'
-        };
-    }
+async function createNode(component, { x, y }) {
+    const node = await component.createNode();
 
-    onClick(node, item) {
-        switch (item) {
-        case 'Remove': this.editor.removeNode(node); break;    
-        default: break;    
-        }
-    }
+    node.position[0] = x;
+    node.position[1] = y;
+
+    return node;
 }
 
-class ComponentItems {
-    constructor(editor) {
-        this.editor = editor;
-        this.items = {};
-    }
-
-    async onClick({x, y}, item) {
-        const node = await item.createNode();
-
-        node.position[0] = x;
-        node.position[1] = y;
-        this.editor.addNode(node);
-    }
-}
-
-function install(editor, { searchBar = true }) {
-    const nodeItems = new NodeItems(editor);
-    const compItems = new ComponentItems(editor);
-    const menu = new ContextMenu;
+function install(editor, { searchBar = true, allocate = () => [] }) {
+    const el = document.createElement('div');
     const mouse = { x: 0, y: 0 };
 
-    document.body.appendChild(menu.el);
+    document.body.appendChild(el);
+
+    const menu = new Vue({
+        render: h => h(Menu),
+        props: {
+            searchBar
+        }
+    }).$mount(el);
 
     editor.on('componentregister', component => {
-        compItems.items[component.name] = component;
+        menu.$emit('additem', {
+            title: component.name,
+            async onClick() {
+                editor.addNode(await createNode(component, mouse));
+                menu.$emit('hide');
+            },
+            path: allocate(component)
+        });
     });
 
     editor.on('mousemove', ({ x, y }) => {
@@ -49,22 +39,12 @@ function install(editor, { searchBar = true }) {
         mouse.y = y;
     });
 
-    editor.on('contextmenu', ({ e, node, view }) => {
+    editor.on('contextmenu', ({ e }) => {
         e.preventDefault();
         e.stopPropagation();
         const [x, y] = [e.clientX, e.clientY];
 
-        if (node)
-            menu.show(x, y, Object.keys(nodeItems.items), false, item => (menu.hide(), nodeItems.onClick(node, item)))
-        else
-            menu.show(x, y, Object.keys(compItems.items), searchBar, key => (menu.hide(), compItems.onClick(mouse, compItems.items[key])))
-    });
-
-    editor.on('click', ({ e, container }) => {
-        const [x, y] = [e.clientX, e.clientY];
-
-        menu.hide();
-    });
+        menu.$emit('show', x, y);});
 }
 
 export default {
