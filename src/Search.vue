@@ -13,7 +13,6 @@ export default {
   },
   watch: {
     value() {
-      console.log(this.value)
       this.$emit('search', this.value);
     }
   }

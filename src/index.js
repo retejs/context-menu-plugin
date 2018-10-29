@@ -10,25 +10,36 @@ async function createNode(component, { x, y }) {
     return node;
 }
 
-function install(editor, { searchBar = true, allocate = () => [] }) {
+function createMenu(editor, props) {
     const el = document.createElement('div');
-    const mouse = { x: 0, y: 0 };
 
-    document.body.appendChild(el);
+    editor.view.container.appendChild(el);
 
     const menu = new Vue({
-        render: h => h(Menu),
-        props: {
-            searchBar
-        }
+        render: h => h(Menu, { props })
     }).$mount(el);
+
+    return menu;
+}
+
+function install(editor, { searchBar = true, allocate = () => [] }) {
+    const mouse = { x: 0, y: 0 };
+
+    const menu = createMenu(editor, { searchBar });
+    const nodeMenu = createMenu(editor, { searchBar: false });
+
+    nodeMenu.$emit('additem', {
+        title: 'Delete',
+        onClick(args) {
+            editor.removeNode(args.node);
+        }
+    });
 
     editor.on('componentregister', component => {
         menu.$emit('additem', {
             title: component.name,
             async onClick() {
                 editor.addNode(await createNode(component, mouse));
-                menu.$emit('hide');
             },
             path: allocate(component)
         });
@@ -39,12 +50,20 @@ function install(editor, { searchBar = true, allocate = () => [] }) {
         mouse.y = y;
     });
 
-    editor.on('contextmenu', ({ e }) => {
+    editor.on('contextmenu', ({ e, node }) => {
         e.preventDefault();
         e.stopPropagation();
         const [x, y] = [e.clientX, e.clientY];
 
-        menu.$emit('show', x, y);});
+        menu.$emit('hide');
+        nodeMenu.$emit('hide');
+
+        if (node) {
+            nodeMenu.$emit('show', x, y, { node });
+        } else {
+            menu.$emit('show', x, y);
+        }
+    });
 }
 
 export default {

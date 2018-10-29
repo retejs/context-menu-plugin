@@ -6,8 +6,12 @@
   @mouseover="cancelHide()"
   @contextmenu.prevent=""
 )
-  Search(@search="onSearch")
-  Item(v-for='item in filtered',:key="item.title", :item="item")
+  Search(v-if="searchBar", @search="onSearch")
+  Item(v-for='item in filtered'
+    :key="item.title"
+    :item="item"
+    @click="item.onClick(args); hide()"
+  )
 </template>
 
 <script>
@@ -16,13 +20,14 @@ import Item from './Item.vue';
 import Search from './Search.vue';
 
 export default {
-  props: ['searchBar'],
+  props: { searchBar: Boolean },
   mixins: [hideMixin('hide')],
   data() {
     return {
       x: 0,
       y: 0,
       visible: false,
+      args: {},
       filter: '',
       items: [],
     }
@@ -58,11 +63,12 @@ export default {
     onSearch(e) {
       this.filter = e;
     },
-    show(x, y) {
+    show(x, y, args = {}) {
       this.visible = true;
       this.x = x;
       this.y = y;
-
+      this.args = args;
+  
       this.cancelHide();
     },
     hide() {
