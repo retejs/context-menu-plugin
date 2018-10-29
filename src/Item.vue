@@ -1,12 +1,16 @@
 <template lang="pug">
 .item(
-  @click="onClick()"
+  @click="onClick($event)"
   @mouseover="showSubitems()"
   @mouseleave="timeoutHide()"
   :class="{ hasSubitems }"
 ) {{item.title}}
   .subitems(v-if="hasSubitems && this.visibleSubitems")
-    Item(v-for="subitem in item.subitems", :key="subitem.title", :item="subitem")
+    Item(v-for="subitem in item.subitems"
+      :key="subitem.title"
+      :item="subitem"
+      :args="args"
+      )
 </template>
 
 <script>
@@ -15,7 +19,7 @@ import hideMixin from './debounceHide'
 export default {
   name: 'Item',
   mixins: [hideMixin('hideSubitems', 500)],
-  props: { item: Object, click: Function },
+  props: { item: Object, args: Object },
   data() {
     return {
       visibleSubitems: false, 
@@ -34,8 +38,11 @@ export default {
     hideSubitems() {
       this.visibleSubitems = false;
     },
-    onClick() {
-      this.$emit('click');
+    onClick(e) {
+      e.stopPropagation();
+
+      this.item.onClick(this.args);
+      this.$root.$emit('hide');
     }
   }
 }

@@ -10,7 +10,7 @@
   Item(v-for='item in filtered'
     :key="item.title"
     :item="item"
-    @click="item.onClick(args); hide()"
+    :args="args"
   )
 </template>
 
