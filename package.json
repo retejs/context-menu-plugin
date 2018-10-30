@@ -1,6 +1,6 @@
 {
   "name": "rete-context-menu-plugin",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "description": "",
   "main": "build/context-menu-plugin.min.js",
   "scripts": {

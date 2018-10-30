@@ -23,10 +23,17 @@ function createMenu(editor, props) {
 }
 
 function install(editor, { searchBar = true, delay = 1000, allocate = () => [] }) {
+    editor.bind('hidecontextmenu');
+
     const mouse = { x: 0, y: 0 };
 
     const menu = createMenu(editor, { searchBar, delay });
     const nodeMenu = createMenu(editor, { searchBar: false, delay });
+
+    editor.on('hidecontextmenu', () => {
+        menu.$emit('hide');
+        nodeMenu.$emit('hide');
+    });
 
     nodeMenu.$emit('additem', {
         title: 'Delete',
@@ -50,13 +57,16 @@ function install(editor, { searchBar = true, delay = 1000, allocate = () => [] }
         mouse.y = y;
     });
 
+    editor.on('click', () => {
+        editor.trigger('hidecontextmenu');
+    });
+
     editor.on('contextmenu', ({ e, node }) => {
         e.preventDefault();
         e.stopPropagation();
+        editor.trigger('hidecontextmenu');
+        
         const [x, y] = [e.clientX, e.clientY];
-
-        menu.$emit('hide');
-        nodeMenu.$emit('hide');
 
         if (node) {
             nodeMenu.$emit('show', x, y, { node });
