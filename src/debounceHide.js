@@ -1,6 +1,7 @@
 import { debounce } from 'lodash';
 
-export default (hideMethod, time = 1000) => ({
+export default (hideMethod) => ({
+    props: { delay: { type: Number, required: true } },
     data() {
         return {
             timeoutHide: () => {}
@@ -15,6 +16,6 @@ export default (hideMethod, time = 1000) => ({
         }
     },
     mounted() {
-        this.timeoutHide = debounce(this[hideMethod], time);
+        this.timeoutHide = debounce(this[hideMethod], this.delay);
     }
 })

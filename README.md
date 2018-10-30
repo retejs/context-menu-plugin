@@ -7,6 +7,7 @@ import ContextMenuPlugin from 'rete-context-menu-plugin';
 
 editor.use(ContextMenuPlugin, {
     searchBar: false,
+    delay: 100,
     allocate(component) {
         return ['Submenu']
     }
@@ -15,6 +16,7 @@ editor.use(ContextMenuPlugin, {
 | Options | Description | Default |
 |-|-|-|
 | `searchBar` | Showing search bar | `true`
+| `delay` | Delay hide, ms | `1000`
 | `allocate` | function for placing of components into submenu | `() => []`
 
 

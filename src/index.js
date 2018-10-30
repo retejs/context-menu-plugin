@@ -22,11 +22,11 @@ function createMenu(editor, props) {
     return menu;
 }
 
-function install(editor, { searchBar = true, allocate = () => [] }) {
+function install(editor, { searchBar = true, delay = 1000, allocate = () => [] }) {
     const mouse = { x: 0, y: 0 };
 
-    const menu = createMenu(editor, { searchBar });
-    const nodeMenu = createMenu(editor, { searchBar: false });
+    const menu = createMenu(editor, { searchBar, delay });
+    const nodeMenu = createMenu(editor, { searchBar: false, delay });
 
     nodeMenu.$emit('additem', {
         title: 'Delete',

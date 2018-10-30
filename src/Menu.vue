@@ -11,6 +11,7 @@
     :key="item.title"
     :item="item"
     :args="args"
+    :delay="delay / 2"
   )
 </template>
 

@@ -10,6 +10,7 @@
       :key="subitem.title"
       :item="subitem"
       :args="args"
+      :delay="delay"
       )
 </template>
 
@@ -18,7 +19,7 @@ import hideMixin from './debounceHide'
 
 export default {
   name: 'Item',
-  mixins: [hideMixin('hideSubitems', 500)],
+  mixins: [hideMixin('hideSubitems')],
   props: { item: Object, args: Object },
   data() {
     return {
