@@ -10,6 +10,9 @@ editor.use(ContextMenuPlugin, {
     delay: 100,
     allocate(component) {
         return ['Submenu']
+    },
+    items: {
+        'Click me'(){ console.log('Works!') }
     }
 });
 ```
@@ -18,6 +21,7 @@ editor.use(ContextMenuPlugin, {
 | `searchBar` | Showing search bar | `true`
 | `delay` | Delay hide, ms | `1000`
 | `allocate` | function for placing of components into submenu | `() => []`
+| `items` | custom items (`Object` with nested objects and functions) | `{}`
 
 
 You can arbitrarily put a component in a submenu. Examples: 
@@ -28,4 +32,9 @@ allocate() { return ["Single submenu"] }
 
 ```js
 allocate(component) { return component.path } // where path is a stack of menu for every component
+```
+
+
+```js
+allocate(component) { return null } // exclude component from menu items
 ```
