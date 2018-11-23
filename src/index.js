@@ -43,13 +43,16 @@ function install(editor, { searchBar = true, delay = 1000, allocate = () => [] }
     });
 
     editor.on('componentregister', component => {
-        menu.$emit('additem', {
-            title: component.name,
-            async onClick() {
-                editor.addNode(await createNode(component, mouse));
-            },
-            path: allocate(component)
-        });
+        const path = allocate(component);
+
+        if (Array.isArray(path)) // add to the menu if path is array
+            menu.$emit('additem', {
+                title: component.name,
+                async onClick() {
+                    editor.addNode(await createNode(component, mouse));
+                },
+                path
+            });
     });
 
     editor.on('mousemove', ({ x, y }) => {
@@ -65,7 +68,7 @@ function install(editor, { searchBar = true, delay = 1000, allocate = () => [] }
         e.preventDefault();
         e.stopPropagation();
         editor.trigger('hidecontextmenu');
-        
+
         const [x, y] = [e.clientX, e.clientY];
 
         if (node) {
