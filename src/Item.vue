@@ -41,8 +41,9 @@ export default {
     },
     onClick(e) {
       e.stopPropagation();
-
-      this.item.onClick(this.args);
+      
+      if(this.item.onClick)
+        this.item.onClick(this.args);
       this.$root.$emit('hide');
     }
   }
