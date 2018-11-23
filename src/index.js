@@ -1,5 +1,5 @@
 import Menu from './Menu';
-import { createNode } from './utils';
+import { createNode, traverse } from './utils';
 
 function configureNodeItems(menu, editor) {
     menu.addItem('Delete', ({ node }) => editor.removeNode(node));
@@ -11,9 +11,14 @@ function configureNodeItems(menu, editor) {
     });
 } 
 
-function configureMainItems(menu, editor, { allocate }) {
+function configureMainItems(menu, editor, { items, allocate }) {
     const mouse = { x: 0, y: 0 };
 
+    editor.on('mousemove', ({ x, y }) => {
+        mouse.x = x;
+        mouse.y = y;
+    });
+    
     editor.on('componentregister', component => {
         const path = allocate(component);
 
@@ -23,21 +28,18 @@ function configureMainItems(menu, editor, { allocate }) {
             },
             path);
     });
-    
-    editor.on('mousemove', ({ x, y }) => {
-        mouse.x = x;
-        mouse.y = y;
-    });
+
+    traverse(items, (name, func, path) => menu.addItem(name, func, path))
 }
 
-function install(editor, { searchBar = true, delay = 1000, allocate = () => [] }) {
+function install(editor, { searchBar = true, delay = 1000, items = {}, allocate = () => [] }) {
     editor.bind('hidecontextmenu');
 
     const menu = new Menu(editor, { searchBar, delay });
     const nodeMenu = new Menu(editor, { searchBar: false, delay });
 
     configureNodeItems(nodeMenu, editor);
-    configureMainItems(menu, editor, { allocate });
+    configureMainItems(menu, editor, { items, allocate });
 
     editor.on('hidecontextmenu', () => {
         menu.hide();

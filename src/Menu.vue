@@ -85,7 +85,7 @@ export default {
           items.push(exist)
         }
 
-        items = exist.subitems;
+        items = exist.subitems || (exist.subitems = []);
       }
 
       items.push({ title, onClick });
