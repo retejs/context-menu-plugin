@@ -77,5 +77,6 @@ function install(editor, { searchBar = true, delay = 1000, allocate = () => [] }
 }
 
 export default {
+    name: 'context-menu',
     install
 }
