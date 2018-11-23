@@ -60,14 +60,13 @@ function install(editor, { searchBar = true, delay = 1000, allocate = () => [] }
         mouse.y = y;
     });
 
-    editor.on('click', () => {
+    editor.on('click contextmenu', () => {
         editor.trigger('hidecontextmenu');
     });
 
     editor.on('contextmenu', ({ e, node }) => {
         e.preventDefault();
         e.stopPropagation();
-        editor.trigger('hidecontextmenu');
 
         const [x, y] = [e.clientX, e.clientY];
 
