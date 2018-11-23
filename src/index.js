@@ -1,22 +1,18 @@
-import { createNode } from './utils';
 import Menu from './Menu';
+import { createNode } from './utils';
 
-function install(editor, { searchBar = true, delay = 1000, allocate = () => [] }) {
-    editor.bind('hidecontextmenu');
+function configureNodeItems(menu, editor) {
+    menu.addItem('Delete', ({ node }) => editor.removeNode(node));
+    menu.addItem('Clone', async (args) => {
+        const { name, data, meta, position: [x, y] } = args.node;
+        const component = editor.components.get(name);
 
+        editor.addNode(await createNode(component, { data, meta, x: x + 10, y: y + 10 }));
+    });
+} 
+
+function configureMainItems(menu, editor, { allocate }) {
     const mouse = { x: 0, y: 0 };
-
-    const menu = new Menu(editor, { searchBar, delay });
-    const nodeMenu = new Menu(editor, { searchBar: false, delay });
-
-    editor.on('hidecontextmenu', () => {
-        menu.hide();
-        nodeMenu.hide();
-    });
-
-    nodeMenu.addItem('Delete', (args) => {
-        editor.removeNode(args.node);
-    });
 
     editor.on('componentregister', component => {
         const path = allocate(component);
@@ -27,10 +23,25 @@ function install(editor, { searchBar = true, delay = 1000, allocate = () => [] }
             },
             path);
     });
-
+    
     editor.on('mousemove', ({ x, y }) => {
         mouse.x = x;
         mouse.y = y;
+    });
+}
+
+function install(editor, { searchBar = true, delay = 1000, allocate = () => [] }) {
+    editor.bind('hidecontextmenu');
+
+    const menu = new Menu(editor, { searchBar, delay });
+    const nodeMenu = new Menu(editor, { searchBar: false, delay });
+
+    configureNodeItems(nodeMenu, editor);
+    configureMainItems(menu, editor, { allocate });
+
+    editor.on('hidecontextmenu', () => {
+        menu.hide();
+        nodeMenu.hide();
     });
 
     editor.on('click contextmenu', () => {
