@@ -75,7 +75,7 @@ export default {
     hide() {
       this.visible = false;
     },
-    additem({ title, onClick, path = []}) {
+    additem(title, onClick, path = []) {
       let items = this.items;
       for(let level of path) {
         let exist = items.find(i => i.title === level);
