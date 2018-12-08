@@ -18,3 +18,10 @@ export function traverse(items, callback, path = []) {
             traverse(items[key], callback, [...path, key])
     })
 }
+
+export function fitViewport([x, y], element) {
+    return [
+        Math.min(x, window.innerWidth - element.clientWidth),
+        Math.min(y, window.innerHeight - element.clientHeight)
+    ]
+}

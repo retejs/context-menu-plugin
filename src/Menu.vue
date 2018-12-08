@@ -1,5 +1,6 @@
 <template lang="pug">
 .context-menu(
+  ref="menu"
   v-if="visible"
   v-bind:style="style",
   @mouseleave='timeoutHide()',
@@ -19,6 +20,7 @@
 import hideMixin from './debounceHide'
 import Item from './Item.vue';
 import Search from './Search.vue';
+import { fitViewport } from './utils';
 
 export default {
   props: { searchBar: Boolean },
@@ -90,6 +92,11 @@ export default {
 
       items.push({ title, onClick });
     },
+  },
+  updated() {
+    if(this.$refs.menu) {
+      [this.x, this.y] = fitViewport([this.x, this.y], this.$refs.menu)
+    } 
   },
   mounted() {
     this.$root.$on('show', this.show);
