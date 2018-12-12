@@ -23,7 +23,7 @@ function configureMainItems(menu, editor, { items, allocate }) {
         const path = allocate(component);
 
         if (Array.isArray(path)) // add to the menu if path is array
-            menu.addItem(component.name, async () => {
+            menu.addItem(component.contextMenuName || component.name, async () => {
                 editor.addNode(await createNode(component, mouse));
             },
             path);
