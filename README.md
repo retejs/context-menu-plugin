@@ -49,9 +49,9 @@ To change the items that create nodes, you may need to change the name.
 class MyComponent {
     constructor() {
         super("My comp");
-        this.contextMenuItem = "Add My comp";
+        this.contextMenuName = "Add My comp";
     }
 }
 ///
-rename(component) { return component.contextMenuItem || contextMenuItem.name }
+rename(component) { return component.contextMenuName || component.name }
 ```
