@@ -11,7 +11,7 @@ function configureNodeItems(menu, editor) {
     });
 } 
 
-function configureMainItems(menu, editor, { items, allocate }) {
+function configureMainItems(menu, editor, { items, allocate, rename }) {
     const mouse = { x: 0, y: 0 };
 
     editor.on('mousemove', ({ x, y }) => {
@@ -23,7 +23,7 @@ function configureMainItems(menu, editor, { items, allocate }) {
         const path = allocate(component);
 
         if (Array.isArray(path)) // add to the menu if path is array
-            menu.addItem(component.name, async () => {
+            menu.addItem(rename(component), async () => {
                 editor.addNode(await createNode(component, mouse));
             },
             path);
@@ -32,14 +32,20 @@ function configureMainItems(menu, editor, { items, allocate }) {
     traverse(items, (name, func, path) => menu.addItem(name, func, path))
 }
 
-function install(editor, { searchBar = true, delay = 1000, items = {}, allocate = () => [] }) {
+function install(editor, { 
+    searchBar = true,
+    delay = 1000,
+    items = {},
+    allocate = () => [],
+    rename = component => component.name
+}) {
     editor.bind('hidecontextmenu');
 
     const menu = new Menu(editor, { searchBar, delay });
     const nodeMenu = new Menu(editor, { searchBar: false, delay });
 
     configureNodeItems(nodeMenu, editor);
-    configureMainItems(menu, editor, { items, allocate });
+    configureMainItems(menu, editor, { items, allocate, rename });
 
     editor.on('hidecontextmenu', () => {
         menu.hide();

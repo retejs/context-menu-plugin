@@ -9,7 +9,10 @@ editor.use(ContextMenuPlugin, {
     searchBar: false,
     delay: 100,
     allocate(component) {
-        return ['Submenu']
+        return ['Submenu'];
+    },
+    rename(component) {
+        return component.name;
     },
     items: {
         'Click me'(){ console.log('Works!') }
@@ -21,6 +24,7 @@ editor.use(ContextMenuPlugin, {
 | `searchBar` | Showing search bar | `true`
 | `delay` | Delay hide, ms | `1000`
 | `allocate` | function for placing of components into submenu | `() => []`
+| `rename` | function for renaming of items| `component => component.name`
 | `items` | custom items (`Object` with nested objects and functions) | `{}`
 
 
@@ -37,4 +41,17 @@ allocate(component) { return component.path } // where path is a stack of menu f
 
 ```js
 allocate(component) { return null } // exclude component from menu items
+```
+
+To change the items that create nodes, you may need to change the name.
+
+```js
+class MyComponent {
+    constructor() {
+        super("My comp");
+        this.contextMenuItem = "Add My comp";
+    }
+}
+///
+rename(component) { return component.contextMenuItem || contextMenuItem.name }
 ```
