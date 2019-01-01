@@ -1,13 +1,13 @@
-import Menu from './Menu';
 import { createNode, traverse } from './utils';
+import Menu from './Menu';
 
 function configureNodeItems(menu, editor) {
     menu.addItem('Delete', ({ node }) => editor.removeNode(node));
     menu.addItem('Clone', async (args) => {
-        const { name, data, meta, position: [x, y] } = args.node;
+        const { name, position: [x, y], ...params } = args.node;
         const component = editor.components.get(name);
 
-        editor.addNode(await createNode(component, { data, meta, x: x + 10, y: y + 10 }));
+        editor.addNode(await createNode(component, { ...params, x: x + 10, y: y + 10 }));
     });
 } 
 

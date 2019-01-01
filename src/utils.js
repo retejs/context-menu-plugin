@@ -1,10 +1,14 @@
-export async function createNode(component, { data = {}, meta = {}, x, y }) {
-    const node = await component.createNode(data);
+export function deepCopy(obj) {
+    return JSON.parse(JSON.stringify(obj));
+}
 
-    node.meta = meta;
+export async function createNode(component, { data = {}, meta = {}, x = 0, y = 0 }) {
+    const node = await component.createNode(deepCopy(data));
+
+    node.meta = deepCopy(meta);
     node.position[0] = x;
     node.position[1] = y;
-
+    
     return node;
 }
 
