@@ -52,8 +52,8 @@ export default {
 
 
 <style lang="sass" scoped>
-@import './vars.sass'
-@import './common.sass'
+@import '../vars.sass'
+@import '../common.sass'
 
 .item
   @extend .item

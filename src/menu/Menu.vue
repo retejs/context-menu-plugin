@@ -20,7 +20,7 @@
 import hideMixin from './debounceHide'
 import Item from './Item.vue';
 import Search from './Search.vue';
-import { fitViewport } from './utils';
+import { fitViewport } from '../utils';
 
 export default {
   props: { searchBar: Boolean },
@@ -112,8 +112,8 @@ export default {
 
 
 <style lang="sass" scoped>
-@import './vars.sass'
-@import './common.sass'
+@import '../vars.sass'
+@import '../common.sass'
 
 .context-menu
   left: 0
