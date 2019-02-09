@@ -3,7 +3,7 @@ Rete context menu plugin
 #### Rete.js plugin
 
 ```js
-import ContextMenuPlugin from 'rete-context-menu-plugin';
+import ContextMenuPlugin, { Menu, Item, Search } from 'rete-context-menu-plugin';
 
 editor.use(ContextMenuPlugin, {
     searchBar: false,
@@ -16,7 +16,8 @@ editor.use(ContextMenuPlugin, {
     },
     items: {
         'Click me'(){ console.log('Works!') }
-    }
+    },
+    vueComponent: CustomVueComponent // extends Menu
 });
 ```
 | Options | Description | Default |
