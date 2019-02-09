@@ -3,13 +3,13 @@ import Vue from 'vue';
 
 export default class {
     
-    constructor(editor, props) {
+    constructor(editor, props, vueComponent) {
         const el = document.createElement('div');
 
         editor.view.container.appendChild(el);
 
         this.menu = new Vue({
-            render: h => h(Menu, { props })
+            render: h => h(vueComponent || Menu, { props })
         }).$mount(el);
     }
 

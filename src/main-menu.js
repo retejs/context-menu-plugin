@@ -2,8 +2,8 @@ import { createNode, traverse } from './utils';
 import Menu from './menu/index';
 
 export default class NodeMenu extends Menu {
-    constructor(editor, props, { items, allocate, rename }) {
-        super(editor, props);
+    constructor(editor, props, vueComponent, { items, allocate, rename }) {
+        super(editor, props, vueComponent);
         
         const mouse = { x: 0, y: 0 };
 

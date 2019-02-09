@@ -2,8 +2,8 @@ import Menu from './menu/index';
 import { createNode } from './utils';
 
 export default class NodeMenu extends Menu {
-    constructor(editor, props) {
-        super(editor, props);
+    constructor(editor, props, vueComponent) {
+        super(editor, props, vueComponent);
         
         this.addItem('Delete', ({ node }) => editor.removeNode(node));
         this.addItem('Clone', async (args) => {
