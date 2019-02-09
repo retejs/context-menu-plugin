@@ -1,8 +1,9 @@
 {
   "name": "rete-context-menu-plugin",
-  "version": "0.3.3",
+  "version": "0.3.4",
   "description": "",
-  "main": "build/context-menu-plugin.min.js",
+  "main": "build/context-menu-plugin.common.js",
+  "module": "build/context-menu-plugin.esm.js",
   "scripts": {
     "build": "rete --build rete.config.js",
     "build:dev": "rete --build rete.config.js --watch",
