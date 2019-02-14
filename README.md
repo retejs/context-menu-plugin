@@ -6,7 +6,8 @@ Rete context menu plugin
 import ContextMenuPlugin, { Menu, Item, Search } from 'rete-context-menu-plugin';
 
 editor.use(ContextMenuPlugin, {
-    searchBar: false,
+    searchBar: false, // true by default
+    searchKeep: title => true, // leave item when searching, optional. For example, title => ['Refresh'].includes(title)
     delay: 100,
     allocate(component) {
         return ['Submenu'];
