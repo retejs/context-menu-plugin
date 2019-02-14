@@ -1,7 +1,7 @@
 import { createNode, traverse } from './utils';
 import Menu from './menu/index';
 
-export default class NodeMenu extends Menu {
+export default class MainMenu extends Menu {
     constructor(editor, props, vueComponent, { items, allocate, rename }) {
         super(editor, props, vueComponent);
         
