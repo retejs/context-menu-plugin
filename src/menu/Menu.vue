@@ -23,7 +23,7 @@ import Search from './Search.vue';
 import { fitViewport } from '../utils';
 
 export default {
-  props: { searchBar: Boolean },
+  props: { searchBar: Boolean, searchKeep: Function },
   mixins: [hideMixin('hide')],
   data() {
     return {
@@ -43,12 +43,16 @@ export default {
       }
     },
     filtered() {
-      if(!this.filter) return this.items;
+      const substr = this.filter.toLowerCase();
+
+      if(!substr) return this.items;
       
       return this.extractLeafs(this.items)
-        .filter(i => i.title.toLowerCase()
-          .includes(this.filter.toLowerCase())
-        );
+        .filter(i => {
+          let title = i.title.toLowerCase();
+          
+          return this.searchKeep(title) || title.includes(substr)
+        });
     }
   },
   methods: {

@@ -6,6 +6,7 @@ import VueSearch from './menu/Search.vue';
 
 function install(editor, { 
     searchBar = true,
+    searchKeep = () => false,
     delay = 1000,
     items = {},
     allocate = () => [],
@@ -14,7 +15,7 @@ function install(editor, {
 }) {
     editor.bind('hidecontextmenu');
 
-    const mainMenu = new MainMenu(editor, { searchBar, delay }, vueComponent, { items, allocate, rename });
+    const mainMenu = new MainMenu(editor, { searchBar, searchKeep, delay }, vueComponent, { items, allocate, rename });
     const nodeMenu = new NodeMenu(editor, { searchBar: false, delay }, vueComponent);
 
     editor.on('hidecontextmenu', () => {
