@@ -7,7 +7,7 @@
   @mouseover="cancelHide()"
   @contextmenu.prevent=""
 )
-  Search(v-if="searchBar", @search="onSearch")
+  Search(v-if="searchBar", v-model="filter", @search="onSearch")
   Item(v-for='item in filtered'
     :key="item.title"
     :item="item"

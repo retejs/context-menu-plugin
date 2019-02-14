@@ -5,12 +5,7 @@
 
 <script>
 export default {
-  props: ['search'],
-  data() {
-    return {
-      value: ''
-    }
-  },
+  props: ['value', 'search'],
   watch: {
     value() {
       this.$emit('search', this.value);
