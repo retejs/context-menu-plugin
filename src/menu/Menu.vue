@@ -43,15 +43,12 @@ export default {
       }
     },
     filtered() {
-      const substr = this.filter.toLowerCase();
-
-      if(!substr) return this.items;
+      if(!this.filter) return this.items;
+      const regex = new RegExp(this.filter, 'i');
       
       return this.extractLeafs(this.items)
-        .filter(i => {
-          let title = i.title.toLowerCase();
-          
-          return this.searchKeep(title) || title.includes(substr)
+        .filter(({ title }) => {
+          return this.searchKeep(title) || title.match(regex)
         });
     }
   },
