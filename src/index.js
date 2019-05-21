@@ -4,11 +4,12 @@ import VueItem from './menu/Item.vue';
 import VueMenu from './menu/Menu.vue';
 import VueSearch from './menu/Search.vue';
 
-function install(editor, { 
+function install(editor, {
     searchBar = true,
     searchKeep = () => false,
     delay = 1000,
     items = {},
+    nodeItems = {},
     allocate = () => [],
     rename = component => component.name,
     vueComponent = null
@@ -16,7 +17,7 @@ function install(editor, {
     editor.bind('hidecontextmenu');
 
     const mainMenu = new MainMenu(editor, { searchBar, searchKeep, delay }, vueComponent, { items, allocate, rename });
-    const nodeMenu = new NodeMenu(editor, { searchBar: false, delay }, vueComponent);
+    const nodeMenu = new NodeMenu(editor, { searchBar: false, delay }, vueComponent, nodeItems);
 
     editor.on('hidecontextmenu', () => {
         mainMenu.hide();
