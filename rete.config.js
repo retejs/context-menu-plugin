@@ -7,8 +7,14 @@ export default {
     name: 'ContextMenuPlugin',
     globals: {
         'vue': 'Vue',
-        'lodash': '_'
+        'lodash': '_',
+        'react': 'React',
+        'react-dom': 'ReactDOM'
     },
+    extensions: ['.js', '.jsx'],
+    babelPresets: [
+        require('@babel/preset-react')
+    ],
     plugins: [
         pug({
             pugRuntime: false

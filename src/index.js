@@ -1,8 +1,8 @@
-import MainMenu from './main-menu';
-import NodeMenu from './node-menu';
-import VueItem from './menu/Item.vue';
-import VueMenu from './menu/Menu.vue';
-import VueSearch from './menu/Search.vue';
+import ReactMenu, * as ReactComponents from './react-menu';
+import VueMenu, * as VueComponents from './vue-menu';
+import getMainMenu from './main-menu';
+import getNodeMenu from './node-menu';
+import IMenu from './menu';
 
 function install(editor, {
     searchBar = true,
@@ -12,12 +12,13 @@ function install(editor, {
     nodeItems = {},
     allocate = () => [],
     rename = component => component.name,
-    vueComponent = null
+    Menu = null
 }) {
-    editor.bind('hidecontextmenu');
+    if(!Menu) throw new TypeError('Menu must be defined');
 
-    const mainMenu = new MainMenu(editor, { searchBar, searchKeep, delay }, vueComponent, { items, allocate, rename });
-    const nodeMenu = new NodeMenu(editor, { searchBar: false, delay }, vueComponent, nodeItems);
+    editor.bind('hidecontextmenu');
+    const mainMenu = new (getMainMenu(Menu))(editor, { searchBar, searchKeep, delay }, { items, allocate, rename });
+    const nodeMenu = new (getNodeMenu(Menu))(editor, { searchBar: false, delay }, nodeItems);
 
     editor.on('hidecontextmenu', () => {
         mainMenu.hide();
@@ -33,15 +34,18 @@ function install(editor, {
         e.stopPropagation();
 
         const [x, y] = [e.clientX, e.clientY];
-        const menu = node ? nodeMenu : mainMenu;
 
-        menu.show(x, y, { node });
+        (node ? nodeMenu : mainMenu).show(x, y, { node });
     });
 }
 
-export const Menu = VueMenu;
-export const Item = VueItem;
-export const Search = VueSearch;
+export {
+    VueMenu,
+    VueComponents,
+    ReactMenu,
+    ReactComponents,
+    IMenu
+}
 
 export default {
     name: 'context-menu',

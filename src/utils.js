@@ -29,3 +29,18 @@ export function fitViewport([x, y], element) {
         Math.min(y, window.innerHeight - element.clientHeight)
     ]
 }
+
+export function injectItem(items, title, onClick, path) {
+    for (let level of path) {
+        let exist = items.find(i => i.title === level);
+
+        if (!exist) {
+            exist = { title: level, subitems: [] };
+            items.push(exist)
+        }
+
+        items = exist.subitems || (exist.subitems = []);
+    }
+
+    items.push({ title, onClick });
+}

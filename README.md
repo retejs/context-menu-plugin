@@ -3,9 +3,16 @@ Rete context menu plugin
 #### Rete.js plugin
 
 ```js
-import ContextMenuPlugin, { Menu, Item, Search } from 'rete-context-menu-plugin';
+import ContextMenuPlugin, { 
+    VueMenu,
+    VueComponents,
+    ReactMenu,
+    ReactComponents,
+    IMenu
+} from 'rete-context-menu-plugin';
 
 editor.use(ContextMenuPlugin, {
+    Menu: ReactMenu, // required
     searchBar: false, // true by default
     searchKeep: title => true, // leave item when searching, optional. For example, title => ['Refresh'].includes(title)
     delay: 100,
@@ -20,12 +27,12 @@ editor.use(ContextMenuPlugin, {
     },
     nodeItems: {
         'Click me'(){ console.log('Works for node!') }
-    },
-    vueComponent: CustomVueComponent // extends Menu
+    }
 });
 ```
 | Options | Description | Default |
 |-|-|-|
+| `Menu` | 
 | `searchBar` | Showing search bar | `true`
 | `delay` | Delay hide, ms | `1000`
 | `allocate` | function for placing of components into submenu | `() => []`

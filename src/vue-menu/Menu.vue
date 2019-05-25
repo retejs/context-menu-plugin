@@ -20,7 +20,7 @@
 import hideMixin from './debounceHide'
 import Item from './Item.vue';
 import Search from './Search.vue';
-import { fitViewport } from '../utils';
+import { injectItem, fitViewport } from '../utils';
 
 export default {
   props: { searchBar: Boolean, searchKeep: Function },
@@ -79,19 +79,7 @@ export default {
       this.visible = false;
     },
     additem(title, onClick, path = []) {
-      let items = this.items;
-      for(let level of path) {
-        let exist = items.find(i => i.title === level);
-
-        if(!exist) {
-          exist = { title: level, subitems: [] };
-          items.push(exist)
-        }
-
-        items = exist.subitems || (exist.subitems = []);
-      }
-
-      items.push({ title, onClick });
+      injectItem(this.items, title, onClick, path);
     },
   },
   updated() {
