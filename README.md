@@ -61,3 +61,25 @@ class MyComponent {
 ///
 rename(component) { return component.contextMenuName || component.name }
 ```
+
+Prevent showing context menu
+
+```js
+editor.on('showcontextmenu', ({ e, node }) => { // e - MouseEvent, node - Node instance or null
+    return Boolean(node); // show context menu for nodes only
+});
+```
+Prevent context menu for particular Node
+
+```js
+class AddComponent extends Rete.Component {
+    constructor(){
+        // ...
+        this.data.noContextMenu = true;
+    }
+// ...
+
+editor.on('showcontextmenu', ({ node }) => {
+    return !node || !editor.components.get(node.name).data.noContextMenu;
+});
+```

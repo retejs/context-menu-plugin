@@ -15,6 +15,7 @@ function install(editor, {
     vueComponent = null
 }) {
     editor.bind('hidecontextmenu');
+    editor.bind('showcontextmenu');
 
     const mainMenu = new MainMenu(editor, { searchBar, searchKeep, delay }, vueComponent, { items, allocate, rename });
     const nodeMenu = new NodeMenu(editor, { searchBar: false, delay }, vueComponent, nodeItems);
@@ -31,6 +32,8 @@ function install(editor, {
     editor.on('contextmenu', ({ e, node }) => {
         e.preventDefault();
         e.stopPropagation();
+
+        if (!editor.trigger('showcontextmenu', { e, node })) return;
 
         const [x, y] = [e.clientX, e.clientY];
         const menu = node ? nodeMenu : mainMenu;
