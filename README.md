@@ -21,11 +21,15 @@ editor.use(ContextMenuPlugin, {
     nodeItems: {
         'Click me'(){ console.log('Works for node!') }
     },
-    getNodeItems: node => {
+    // OR
+    nodeItems: node => {
         if (node.name === 'Add') {
             return {
-                'Only for Add nodes': () => { console.log('Works for add node!') },
+                'Only for Add nodes'() => { console.log('Works for add node!') },
             };
+        }
+        return { 
+            'Click me'(){ console.log('Works for node!') }
         }
     },
     vueComponent: CustomVueComponent // extends Menu
@@ -38,8 +42,7 @@ editor.use(ContextMenuPlugin, {
 | `allocate` | function for placing of components into submenu | `() => []`
 | `rename` | function for renaming of items| `component => component.name`
 | `items` | custom items (`Object` with nested objects and functions) | `{}`
-| `nodeItems` | custom items for Node menu | `{}`
-| `getNodeItems` | a function that returns nodeItems for a specific node (arg: Node) | `() => ({})`
+| `nodeItems` | custom items for Node menu or a function that returns node items | `{}`
 
 
 You can arbitrarily put a component in a submenu. Examples: 

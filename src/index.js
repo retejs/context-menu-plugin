@@ -4,7 +4,7 @@ import VueItem from './menu/Item.vue';
 import VueMenu from './menu/Menu.vue';
 import VueSearch from './menu/Search.vue';
 
-import merge from 'lodash/merge';
+import isFunction from 'lodash/isFunction';
 
 function install(editor, {
     searchBar = true,
@@ -12,7 +12,6 @@ function install(editor, {
     delay = 1000,
     items = {},
     nodeItems = {},
-    getNodeItems = () => ({}),
     allocate = () => [],
     rename = component => component.name,
     vueComponent = null
@@ -36,9 +35,8 @@ function install(editor, {
     editor.on('contextmenu', ({ e, node }) => {
         e.preventDefault();
         e.stopPropagation();
-        const allNodeItems = node ? merge(nodeItems, getNodeItems(node)) : null;
-        
-        nodeMenu = node ? new NodeMenu(editor, { searchBar: false, delay }, vueComponent, allNodeItems) : nodeMenu;
+        nodeItems = isFunction(nodeItems) ? nodeItems(node) : nodeItems;
+        nodeMenu = node ? new NodeMenu(editor, { searchBar: false, delay }, vueComponent, nodeItems) : nodeMenu;
 
         const [x, y] = [e.clientX, e.clientY];
         const menu = node ? nodeMenu : mainMenu;
