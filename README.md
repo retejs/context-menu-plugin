@@ -19,7 +19,9 @@ editor.use(ContextMenuPlugin, {
         'Click me'(){ console.log('Works!') }
     },
     nodeItems: {
-        'Click me'(){ console.log('Works for node!') }
+        'Click me'(){ console.log('Works for node!') },
+        'Delete': false, // don't show Delete item
+        'Clone': false // or Clone item
     },
     // OR
     nodeItems: node => {
