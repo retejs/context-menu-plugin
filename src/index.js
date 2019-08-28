@@ -4,6 +4,8 @@ import VueItem from './menu/Item.vue';
 import VueMenu from './menu/Menu.vue';
 import VueSearch from './menu/Search.vue';
 
+import isFunction from 'lodash/isFunction';
+
 function install(editor, {
     searchBar = true,
     searchKeep = () => false,
@@ -18,11 +20,13 @@ function install(editor, {
     editor.bind('showcontextmenu');
 
     const mainMenu = new MainMenu(editor, { searchBar, searchKeep, delay }, vueComponent, { items, allocate, rename });
-    const nodeMenu = new NodeMenu(editor, { searchBar: false, delay }, vueComponent, nodeItems);
+    let nodeMenu = null;
 
     editor.on('hidecontextmenu', () => {
         mainMenu.hide();
-        nodeMenu.hide();
+        if (nodeMenu) {
+            nodeMenu.hide();
+        }
     });
 
     editor.on('click contextmenu', () => {
@@ -32,6 +36,8 @@ function install(editor, {
     editor.on('contextmenu', ({ e, node }) => {
         e.preventDefault();
         e.stopPropagation();
+        nodeItems = isFunction(nodeItems) ? nodeItems(node) : nodeItems;
+        nodeMenu = node ? new NodeMenu(editor, { searchBar: false, delay }, vueComponent, nodeItems) : nodeMenu;
 
         if (!editor.trigger('showcontextmenu', { e, node })) return;
 
