@@ -19,14 +19,10 @@ function install(editor, {
     editor.bind('hidecontextmenu');
     editor.bind('showcontextmenu');
 
-    const mainMenu = new MainMenu(editor, { searchBar, searchKeep, delay }, vueComponent, { items, allocate, rename });
-    let nodeMenu = null;
+    let menu = null;
 
     editor.on('hidecontextmenu', () => {
-        mainMenu.hide();
-        if (nodeMenu) {
-            nodeMenu.hide();
-        }
+        if (menu) menu.hide();
     });
 
     editor.on('click contextmenu', () => {
@@ -36,15 +32,18 @@ function install(editor, {
     editor.on('contextmenu', ({ e, node }) => {
         e.preventDefault();
         e.stopPropagation();
-        nodeItems = isFunction(nodeItems) ? nodeItems(node) : nodeItems;
-        nodeMenu = node ? new NodeMenu(editor, { searchBar: false, delay }, vueComponent, nodeItems) : nodeMenu;
 
         if (!editor.trigger('showcontextmenu', { e, node })) return;
 
         const [x, y] = [e.clientX, e.clientY];
-        const menu = node ? nodeMenu : mainMenu;
 
-        menu.show(x, y, { node });
+        if(node) {
+            menu = new NodeMenu(editor, { searchBar: false, delay }, vueComponent,  isFunction(nodeItems) ? nodeItems(node) : nodeItems);
+            menu.show(x, y, { node });
+        } else {
+            menu = new MainMenu(editor, { searchBar, searchKeep, delay }, vueComponent, { items, allocate, rename });
+            menu.show(x, y);
+        }
     });
 }
 
