@@ -6,8 +6,7 @@ export default {
     input: 'src/index.js',
     name: 'ContextMenuPlugin',
     globals: {
-        'vue': 'Vue',
-        'lodash': '_'
+        'vue': 'Vue'
     },
     plugins: [
         pug({
