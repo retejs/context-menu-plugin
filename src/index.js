@@ -4,8 +4,6 @@ import VueItem from './menu/Item.vue';
 import VueMenu from './menu/Menu.vue';
 import VueSearch from './menu/Search.vue';
 
-import isFunction from 'lodash/isFunction';
-
 function install(editor, {
     searchBar = true,
     searchKeep = () => false,
@@ -38,7 +36,7 @@ function install(editor, {
         const [x, y] = [e.clientX, e.clientY];
 
         if(node) {
-            menu = new NodeMenu(editor, { searchBar: false, delay }, vueComponent,  isFunction(nodeItems) ? nodeItems(node) : nodeItems);
+            menu = new NodeMenu(editor, { searchBar: false, delay }, vueComponent,  typeof nodeItems === 'function' ? nodeItems(node) : nodeItems);
             menu.show(x, y, { node });
         } else {
             menu = new MainMenu(editor, { searchBar, searchKeep, delay }, vueComponent, { items, allocate, rename });
