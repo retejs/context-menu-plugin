@@ -1,6 +1,7 @@
-<template lang="pug">
-.search
-  input(v-model="value")
+<template>
+  <div class="search">
+    <input v-model="value"/>
+  </div>
 </template>
 
 <script>
@@ -17,7 +18,7 @@ export default {
 
 <style lang="sass" scoped>
 .search
-  input    
+  input
     color: white
     padding: 1px 8px
     border: 1px solid white

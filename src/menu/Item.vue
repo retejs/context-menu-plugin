@@ -1,17 +1,18 @@
-<template lang="pug">
-.item(
-  @click="onClick($event)"
-  @mouseover="showSubitems()"
-  @mouseleave="timeoutHide()"
-  :class="{ hasSubitems }"
-) {{item.title}}
-  .subitems(v-show="hasSubitems && this.visibleSubitems")
-    Item(v-for="subitem in item.subitems"
-      :key="subitem.title"
-      :item="subitem"
-      :args="args"
-      :delay="delay"
-      )
+<template>
+  <div class="item"
+       @click="onClick($event)"
+       @mouseover="showSubitems()"
+       @mouseleave="timeoutHide()"
+       :class="{ hasSubitems }"
+  >{{item.title}}
+    <div class="subitems" v-show="hasSubitems && this.visibleSubitems">
+      <Item v-for="subitem in item.subitems"
+            :key="subitem.title"
+            :item="subitem"
+            :args="args"
+            :delay="delay"/>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -23,7 +24,7 @@ export default {
   props: { item: Object, args: Object },
   data() {
     return {
-      visibleSubitems: false, 
+      visibleSubitems: false,
     }
   },
   computed: {
@@ -41,7 +42,7 @@ export default {
     },
     onClick(e) {
       e.stopPropagation();
-      
+
       if(this.item.onClick)
         this.item.onClick(this.args);
       this.$root.$emit('hide');
