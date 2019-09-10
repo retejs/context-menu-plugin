@@ -1,19 +1,19 @@
-<template lang="pug">
-.context-menu(
-  ref="menu"
-  v-if="visible"
-  v-bind:style="style",
-  @mouseleave='timeoutHide()',
-  @mouseover="cancelHide()"
-  @contextmenu.prevent=""
-)
-  Search(v-if="searchBar", v-model="filter", @search="onSearch")
-  Item(v-for='item in filtered'
-    :key="item.title"
-    :item="item"
-    :args="args"
-    :delay="delay / 2"
-  )
+<template>
+  <div class="context-menu"
+       ref="menu"
+       v-if="visible"
+       v-bind:style="style"
+       @mouseleave="timeoutHide()"
+       @mouseover="cancelHide()"
+       @contextmenu.prevent=""
+  >
+    <Search v-if="searchBar" v-model="filter" @search="onSearch"></Search>
+    <Item v-for="item in filtered"
+          :key="item.title"
+          :item="item"
+          :args="args"
+          :delay="delay / 2"/>
+  </div>
 </template>
 
 <script>
@@ -38,14 +38,14 @@ export default {
   computed: {
     style() {
       return {
-        top: this.y+'px', 
+        top: this.y+'px',
         left: this.x+'px'
       }
     },
     filtered() {
       if(!this.filter) return this.items;
       const regex = new RegExp(this.filter, 'i');
-      
+
       return this.extractLeafs(this.items)
         .filter(({ title }) => {
           return this.searchKeep(title) || title.match(regex)
@@ -72,7 +72,7 @@ export default {
       this.x = x;
       this.y = y;
       this.args = args;
-  
+
       this.cancelHide();
     },
     hide() {
@@ -97,7 +97,7 @@ export default {
   updated() {
     if(this.$refs.menu) {
       [this.x, this.y] = fitViewport([this.x, this.y], this.$refs.menu)
-    } 
+    }
   },
   mounted() {
     this.$root.$on('show', this.show);
