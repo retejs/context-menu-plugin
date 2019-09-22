@@ -3,8 +3,7 @@ import NodeMenu from './node-menu';
 import VueItem from './menu/Item.vue';
 import VueMenu from './menu/Menu.vue';
 import VueSearch from './menu/Search.vue';
-
-import isFunction from 'lodash/isFunction';
+import { isFunction } from 'lodash-es';
 
 function install(editor, {
     searchBar = true,
