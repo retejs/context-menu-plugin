@@ -7,7 +7,7 @@ export default {
     name: 'ContextMenuPlugin',
     globals: {
         'vue': 'Vue',
-        'lodash-es': '_'
+        'lodash': '_'
     },
     plugins: [
         pug({
