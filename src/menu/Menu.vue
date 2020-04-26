@@ -6,6 +6,7 @@
   @mouseleave='timeoutHide()',
   @mouseover="cancelHide()"
   @contextmenu.prevent=""
+  @wheel.stop=""
 )
   Search(v-if="searchBar", v-model="filter", @search="onSearch")
   Item(v-for='item in filtered'
