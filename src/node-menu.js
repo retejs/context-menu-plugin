@@ -6,7 +6,13 @@ export default class NodeMenu extends Menu {
         super(editor, props, vueComponent);
 
         if (nodeItems['Delete'] !== false) {
-            this.addItem('Delete', ({ node }) => editor.removeNode(node));
+            this.addItem('Delete', ({ node }) => {
+                if (editor.selected.list.indexOf(node) !== -1) {
+                    editor.selected.remove(node);
+                }
+
+                editor.removeNode(node);
+            });
         }
         if (nodeItems['Clone'] !== false) {
             this.addItem('Clone', async (args) => {
