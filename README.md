@@ -9,6 +9,7 @@ editor.use(ContextMenuPlugin, {
     searchBar: false, // true by default
     searchKeep: title => true, // leave item when searching, optional. For example, title => ['Refresh'].includes(title)
     delay: 100,
+    addAtInitialPosition: false,
     allocate(component) {
         return ['Submenu'];
     },
@@ -45,6 +46,7 @@ editor.use(ContextMenuPlugin, {
 | `rename` | function for renaming of items| `component => component.name`
 | `items` | custom items (`Object` with nested objects and functions) | `{}`
 | `nodeItems` | custom items for Node menu or a function that returns node items | `{}`
+| `addAtInitialPosition` | if `true`, will add a new item at the position of the original first context click | `false`
 
 
 You can arbitrarily put a component in a submenu. Examples: 
