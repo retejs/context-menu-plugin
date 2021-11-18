@@ -13,7 +13,8 @@ function install(editor, {
     nodeItems = {},
     allocate = () => [],
     rename = component => component.name,
-    vueComponent = null
+    vueComponent = null,
+    addAtInitialPosition = false
 }) {
     editor.bind('hidecontextmenu');
     editor.bind('showcontextmenu');
@@ -40,7 +41,7 @@ function install(editor, {
             menu = new NodeMenu(editor, { searchBar: false, delay }, vueComponent,  isFunction(nodeItems) ? nodeItems(node) : nodeItems);
             menu.show(x, y, { node });
         } else {
-            menu = new MainMenu(editor, { searchBar, searchKeep, delay }, vueComponent, { items, allocate, rename });
+            menu = new MainMenu(editor, { searchBar, searchKeep, delay, addAtInitialPosition }, vueComponent, { items, allocate, rename });
             menu.show(x, y);
         }
     });

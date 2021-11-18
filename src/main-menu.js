@@ -5,12 +5,18 @@ export default class MainMenu extends Menu {
     constructor(editor, props, vueComponent, { items, allocate, rename }) {
         super(editor, props, vueComponent);
         
-        const mouse = { x: 0, y: 0 };
+        const { x, y } = editor.view.area.mouse;
+        const mouse = { x, y };
 
-        editor.on('mousemove', ({ x, y }) => {
-            mouse.x = x;
-            mouse.y = y;
-        });
+        if (!props.addAtInitialPosition) {
+
+            editor.on('mousemove', ({ x, y }) => {
+                mouse.x = x;
+                mouse.y = y;
+            });
+        }
+        
+
         
         for(const component of editor.components.values()) {
             const path = allocate(component);
