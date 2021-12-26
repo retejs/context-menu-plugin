@@ -11,6 +11,8 @@ export default class NodeMenu extends Menu {
                     editor.selected.remove(node);
                 }
 
+                editor.trigger('nodedelete', { node });
+
                 editor.removeNode(node);
             });
         }
@@ -19,6 +21,8 @@ export default class NodeMenu extends Menu {
                 const { name, position: [x, y], ...params } = args.node;
                 const component = editor.components.get(name);
                 const node = await createNode(component, { ...params, x: x + 10, y: y + 10 });
+
+                editor.trigger('nodeclone', { node, x, y });
 
                 editor.addNode(node);
             });

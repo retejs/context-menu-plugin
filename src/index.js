@@ -17,6 +17,8 @@ function install(editor, {
 }) {
     editor.bind('hidecontextmenu');
     editor.bind('showcontextmenu');
+    editor.bind('nodedelete');
+    editor.bind('nodeclone');
 
     let menu = null;
 
