@@ -1,54 +1,69 @@
 <template>
-<div @click="onClick($event)"
-     @mouseover="showSubitems()"
-     @mouseleave="timeoutHide()"
-     class="item"
-     :class="{ hasSubitems }">
-    {{item.title}}
-    <div class="subitems" v-show="hasSubitems && this.visibleSubitems">
-        <Item v-for="subitem in item.subitems" :key="subitem.title"
-             :item="subitem"
-             :args="args"
-             :delay="delay">
-        </Item>
+    <div @click="onClick"
+         @mouseover="showSubitems"
+         @mouseleave="timeoutHide"
+         class="item"
+         :class="{ hasSubitems }">
+        {{item.title}}
+        <div class="subitems" v-show="hasSubitems && visibleSubitems">
+            <Item v-for="subitem in item.subitems" :key="subitem.title"
+                 :item="subitem"
+                 :args="args"
+                 :delay="delay"
+                  @hide="$emit('hide')"
+            >
+            </Item>
+        </div>
     </div>
-</div>
 </template>
 
 <script>
-import { defineComponent } from "vue";
-import hideMixin from './debounceHide'
+import { debounce } from "lodash-es";
+import { computed, defineComponent, ref, onMounted } from "vue";
 
 export default defineComponent({
-  name: 'Item',
-  mixins: [hideMixin('hideSubitems')],
-  props: { item: Object, args: Object },
-  data() {
-    return {
-      visibleSubitems: false, 
-    }
+  props: {
+      item: Object,
+      args: Object,
+      delay: { type: Number, required: true }
   },
-  computed: {
-    hasSubitems() {
-      return this.item.subitems
+  emits: ["search"],
+  setup(props, { emit }) {
+      onMounted(() => {
+          timeoutHide = debounce(hideSubitems, props.delay);
+      })
+    let timeoutHide = () => {};
+    const visibleSubitems = ref(false);
+    const hasSubitems = computed(() => {
+          return props.item.subitems
+    });
+    const cancelHide = () => {
+          const hide = timeoutHide;
+          if (hide && hide.cancel)
+              timeoutHide.cancel();
     }
-  },
-  methods: {
-    showSubitems() {
-      this.visibleSubitems = true;
-      this.cancelHide();
-    },
-    hideSubitems() {
-      this.visibleSubitems = false;
-    },
-    onClick(e) {
+    const showSubitems = () => {
+          visibleSubitems.value = true;
+          cancelHide();
+      };
+    const hideSubitems = () => {
+          visibleSubitems.value = false;
+    }
+    const onClick = (e) => {
       e.stopPropagation();
-      
-      if(this.item.onClick)
-        this.item.onClick(this.args);
-      this.$root.$emit('hide');
+      if(props.item.onClick)
+        props.item.onClick(props.args);
+      emit('hide');
     }
-  }
+
+    return {
+        onClick,
+        showSubitems,
+        timeoutHide,
+        hasSubitems,
+        visibleSubitems
+    }
+ }
 })
 </script>
 

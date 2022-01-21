@@ -2,8 +2,8 @@
     <div class="context-menu" ref="menu"
          v-if="visible"
          v-bind:style="style"
-         @mouseleave='timeoutHide()'
-         @mouseover="cancelHide()"
+         @mouseleave='timeoutHide'
+         @mouseover="cancelHide"
          @contextmenu.prevent=""
          @wheel.stop="">
         <Search v-if="searchBar" v-model="filter" @search="onSearch"></Search>
@@ -11,102 +11,122 @@
               :key="item.title"
               :item="item"
               :args="args"
-              :delay="delay / 2"></Item>
+              :delay="delay / 2"
+              @hide="hide"
+        ></Item>
     </div>
 </template>
 
 <script>
-import { defineComponent } from "vue";
-import hideMixin from './debounceHide'
+import { debounce } from "lodash-es";
+import { computed, defineComponent, onMounted, onUpdated, ref } from "vue";
 import Item from './Item.vue';
 import Search from './Search.vue';
 import { fitViewport } from '../utils';
 
 export default defineComponent({
-  props: { searchBar: Boolean, searchKeep: Function },
-  mixins: [hideMixin('hide')],
-  data() {
-    return {
-      x: 0,
-      y: 0,
-      visible: false,
-      args: {},
-      filter: '',
-      items: [],
-    }
-  },
-  computed: {
-    style() {
-      return {
-        top: this.y+'px', 
-        left: this.x+'px'
-      }
-    },
-    filtered() {
-      if(!this.filter) return this.items;
-      const regex = new RegExp(this.filter, 'i');
-      
-      return this.extractLeafs(this.items)
-        .filter(({ title }) => {
-          return this.searchKeep(title) || title.match(regex)
-        });
-    }
-  },
-  methods: {
-    extractLeafs(items) {
-      if(!items) return [];
-      let leafs = [];
-      items.map(item => {
-        if(!item.subitems) leafs.push(item)
-
-        leafs.push(...this.extractLeafs(item.subitems))
-      })
-
-      return leafs;
-    },
-    onSearch(e) {
-      this.filter = e;
-    },
-    show(x, y, args = {}) {
-      this.visible = true;
-      this.x = x;
-      this.y = y;
-      this.args = args;
-  
-      this.cancelHide();
-    },
-    hide() {
-      this.visible = false;
-    },
-    additem(title, onClick, path = []) {
-      let items = this.items;
-      for(let level of path) {
-        let exist = items.find(i => i.title === level);
-
-        if(!exist) {
-          exist = { title: level, subitems: [] };
-          items.push(exist)
-        }
-
-        items = exist.subitems || (exist.subitems = []);
-      }
-
-      items.push({ title, onClick });
-    },
-  },
-  updated() {
-    if(this.$refs.menu) {
-      [this.x, this.y] = fitViewport([this.x, this.y], this.$refs.menu)
-    } 
-  },
-  mounted() {
-    this.$root.$on('show', this.show);
-    this.$root.$on('hide', this.hide);
-    this.$root.$on('additem', this.additem);
-  },
   components: {
-    Item,
-    Search
+        Item, Search
+  },
+  props: {
+      searchBar: {type: Boolean, default: false },
+      searchKeep: {type: Function, default: () => {} },
+      delay: { type: Number, required: true }
+  },
+  setup(props) {
+      onMounted(() => {
+          timeoutHide = debounce(hide, props.delay);
+      })
+      let timeoutHide = () => {};
+      let posX = 0;
+      let posY = 0;
+      let filter = '';
+      let items = [];
+      const menu = ref<HTMLElement>null;
+      const visible = ref(false);
+      const args = ref({});
+      const style = computed(() => {
+          return {
+              top: posY+'px',
+              left: posX+'px'
+          }
+      });
+      const filtered = computed(() => {
+          if(!filter) return items;
+          const regex = new RegExp(filter, 'i');
+
+          return extractLeafs(items)
+              .filter(({ title }) => {
+                  return props.searchKeep(title) || title.match(regex)
+              });
+      });
+      const extractLeafs = (items) => {
+          if(!items) return [];
+          let leafs = [];
+          items.map(item => {
+              if(!item.subitems) leafs.push(item)
+
+              leafs.push(...extractLeafs(item.subitems))
+          })
+
+          return leafs;
+      };
+      const onSearch = (e) => {
+          filter = e;
+      };
+      const show = (x, y, args = {}) => {
+          visible.value = true;
+          posX = x;
+          posY = y;
+          args.value = args;
+
+          cancelHide();
+      };
+      const hide = () => {
+          visible.value = false;
+      };
+      const cancelHide = () => {
+          const hide = timeoutHide;
+          if (hide && hide.cancel)
+              timeoutHide.cancel();
+      }
+      const additem = (title, onClick, path = []) => {
+          for(let level of path) {
+              let exist = items.find(i => i.title === level);
+
+              if(!exist) {
+                  exist = { title: level, subitems: [] };
+                  items.push(exist)
+              }
+
+              items = exist.subitems || (exist.subitems = []);
+          }
+
+          items.push({ title, onClick });
+      };
+      onUpdated(() => {
+          if(menu.value) {
+              [posX, posY] = fitViewport([posX, posY], menu.value)
+          }
+      })
+      return {
+          posX,
+          posY,
+          visible,
+          args,
+          filter,
+          items,
+          style,
+          filtered,
+          menu,
+          extractLeafs,
+          onSearch,
+          show,
+          hide,
+          additem,
+          timeoutHide,
+          cancelHide
+      }
   }
 })
 </script>

@@ -13,18 +13,18 @@ export default class {
 
         editor.view.container.appendChild(el);
 
-        this.menu = createVue(el, vueComponent || Menu, { props })
+        this.menu = createVue(el, vueComponent || Menu, props)
     }
 
     addItem(...args) {
-        this.menu.$emit('additem', ...args);
+        this.menu.additem(...args);
     }
 
     show(...args) {
-        this.menu.$emit('show', ...args);
+        this.menu.show(...args);
     }
 
     hide() {
-        this.menu.$emit('hide');
+        this.menu.hide();
     }
 }
