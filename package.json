@@ -1,7 +1,7 @@
 {
   "name": "rete-context-menu-plugin",
-  "version": "1.0.0-alpha1",
-  "description": "",
+  "version": "1.0.0-alpha2",
+  "description": "Rete context menu plugin\r ====\r #### Rete.js plugin",
   "main": "build/context-menu-plugin.common.js",
   "module": "build/context-menu-plugin.esm.js",
   "scripts": {
@@ -13,7 +13,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/retejs/context-menu-plugin.git"
+    "url": "git+https://github.com/retejs/context-menu-plugin.git"
   },
   "dependencies": {
     "@vue/compiler-sfc": "^3.1.5",
@@ -26,5 +26,12 @@
     "rollup-plugin-sass": "^1.2.2",
     "rollup-plugin-scss": "^3.0.0",
     "rollup-plugin-vue": "^6.0.0"
-  }
+  },
+  "bugs": {
+    "url": "https://github.com/retejs/context-menu-plugin/issues"
+  },
+  "homepage": "https://github.com/retejs/context-menu-plugin#readme",
+  "keywords": [
+    "rete.js"
+  ]
 }
