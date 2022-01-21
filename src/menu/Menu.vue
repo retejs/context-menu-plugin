@@ -1,29 +1,28 @@
-<template lang="pug">
-.context-menu(
-  ref="menu"
-  v-if="visible"
-  v-bind:style="style",
-  @mouseleave='timeoutHide()',
-  @mouseover="cancelHide()"
-  @contextmenu.prevent=""
-  @wheel.stop=""
-)
-  Search(v-if="searchBar", v-model="filter", @search="onSearch")
-  Item(v-for='item in filtered'
-    :key="item.title"
-    :item="item"
-    :args="args"
-    :delay="delay / 2"
-  )
+<template>
+    <div class="context-menu" ref="menu"
+         v-if="visible"
+         v-bind:style="style"
+         @mouseleave='timeoutHide()'
+         @mouseover="cancelHide()"
+         @contextmenu.prevent=""
+         @wheel.stop="">
+        <Search v-if="searchBar" v-model="filter" @search="onSearch"></Search>
+        <Item v-for='item in filtered'
+              :key="item.title"
+              :item="item"
+              :args="args"
+              :delay="delay / 2"></Item>
+    </div>
 </template>
 
 <script>
+import { defineComponent } from "vue";
 import hideMixin from './debounceHide'
 import Item from './Item.vue';
 import Search from './Search.vue';
 import { fitViewport } from '../utils';
 
-export default {
+export default defineComponent({
   props: { searchBar: Boolean, searchKeep: Function },
   mixins: [hideMixin('hide')],
   data() {
@@ -109,22 +108,26 @@ export default {
     Item,
     Search
   }
-}
+})
 </script>
 
 
-<style lang="sass" scoped>
-@import '../vars.sass'
-@import '../common.sass'
+<style lang="scss" scoped>
 
-.context-menu
-  left: 0
-  top: 0
-  position: fixed
-  padding: 10px
-  width: $width
-  margin-top: -20px
-  margin-left: -$width/2
-  .search
-    @extend .item
+@use "sass:math";
+@import 'src/vars';
+@import 'src/common';
+
+.context-menu {
+    left: 0;
+    top: 0;
+    position: fixed;
+    padding: 10px;
+    width: $width;
+    margin-top: -20px;
+    margin-left: -(math.div($width, 2));
+    .search {
+        @extend .item;
+    }
+}
 </style>

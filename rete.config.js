@@ -1,5 +1,6 @@
+import commonjs from 'rollup-plugin-commonjs';
 import pug from 'rollup-plugin-pug';
-import sass from 'rollup-plugin-sass';
+import scss from 'rollup-plugin-scss';
 import vue from 'rollup-plugin-vue';
 
 export default {
@@ -13,9 +14,10 @@ export default {
         pug({
             pugRuntime: false
         }),
-        sass({
+        vue(),
+        scss({
             insert: true
         }),
-        vue()
+        commonjs()
     ]
 }
