@@ -74,11 +74,11 @@ export default defineComponent({
       const onSearch = (e) => {
           filter.value = e;
       };
-      const show = (x, y, args = {}) => {
+      const show = (x, y, localArgs = {}) => {
           visible.value = true;
           posX = x;
           posY = y;
-          args.value = args;
+          args.value = localArgs;
 
           cancelHide();
       };
