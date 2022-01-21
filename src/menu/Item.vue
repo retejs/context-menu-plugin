@@ -27,7 +27,7 @@ export default defineComponent({
       args: Object,
       delay: { type: Number, required: true }
   },
-  emits: ["search"],
+  emits: ["hide"],
   setup(props, { emit }) {
       onMounted(() => {
           timeoutHide = debounce(hideSubitems, props.delay);
