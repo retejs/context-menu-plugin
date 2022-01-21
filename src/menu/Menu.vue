@@ -18,8 +18,8 @@
 </template>
 
 <script>
-import { debounce } from "lodash-es";
 import { computed, defineComponent, onMounted, onUpdated, ref } from "vue";
+import debounce from "../lib/debounce";
 import Item from './Item.vue';
 import Search from './Search.vue';
 import { fitViewport } from '../utils';

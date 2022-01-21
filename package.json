@@ -17,7 +17,6 @@
   },
   "dependencies": {
     "@vue/compiler-sfc": "^3.1.5",
-    "lodash-es": "^4.17.15",
     "vue": "^3.1.5"
   },
   "devDependencies": {
