@@ -40,8 +40,8 @@ export default defineComponent({
       let timeoutHide = () => {};
       let posX = 0;
       let posY = 0;
-      let filter = '';
       let items = [];
+      const filter = ref('');
       const menu = ref<HTMLElement>null;
       const visible = ref(false);
       const args = ref({});
@@ -52,8 +52,8 @@ export default defineComponent({
           }
       });
       const filtered = computed(() => {
-          if(!filter) return items;
-          const regex = new RegExp(filter, 'i');
+          if(!filter.value) return items;
+          const regex = new RegExp(filter.value, 'i');
 
           return extractLeafs(items)
               .filter(({ title }) => {
@@ -72,7 +72,7 @@ export default defineComponent({
           return leafs;
       };
       const onSearch = (e) => {
-          filter = e;
+          filter.value = e;
       };
       const show = (x, y, args = {}) => {
           visible.value = true;

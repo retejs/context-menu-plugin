@@ -1,15 +1,23 @@
 <template>
 <div class="search">
-    <input v-model="value" @change="$emit('search', value)">
+    <input v-model="valueRef" @change="$emit('search', valueRef)">
 </div>
 </template>
 
 <script>
-import { defineComponent } from "vue";
+import { defineComponent, ref } from "vue";
 
 export default defineComponent({
-    props: {'value': String},
-    emits: ["search"]
+    props: {
+        value: { type: String, default: '' }
+    },
+    emits: ["search"],
+    setup(props) {
+        const valueRef = ref(props.value)
+        return {
+            valueRef
+        }
+    }
 })
 </script>
 
