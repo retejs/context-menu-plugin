@@ -8,9 +8,9 @@
         <div class="subitems" v-show="hasSubitems && visibleSubitems">
             <Item v-for="subitem in item.subitems" :key="subitem.title"
                  :item="subitem"
-                 :args="args"
                  :delay="delay"
                   @hide="$emit('hide')"
+                  @click="subitemClicked"
             >
             </Item>
         </div>
@@ -27,7 +27,7 @@ export default defineComponent({
       args: Object,
       delay: { type: Number, required: true }
   },
-  emits: ["hide"],
+  emits: ["hide", "click"],
   setup(props, { emit }) {
       onMounted(() => {
           timeoutHide = debounce(hideSubitems, props.delay);
@@ -51,9 +51,12 @@ export default defineComponent({
     }
     const onClick = (e) => {
       e.stopPropagation();
-      if(props.item.onClick)
-        props.item.onClick(props.args);
+      emit('click', props.item)
       emit('hide');
+    }
+
+    const subitemClicked = (subitem) => {
+        emit('click', subitem)
     }
 
     return {
@@ -61,7 +64,8 @@ export default defineComponent({
         showSubitems,
         timeoutHide,
         hasSubitems,
-        visibleSubitems
+        visibleSubitems,
+        subitemClicked
     }
  }
 })

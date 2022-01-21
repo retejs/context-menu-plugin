@@ -10,9 +10,9 @@
         <Item v-for='item in filtered'
               :key="item.title"
               :item="item"
-              :args="args"
               :delay="delay / 2"
               @hide="hide"
+              @click="itemClicked"
         ></Item>
     </div>
 </template>
@@ -37,6 +37,11 @@ export default defineComponent({
       onMounted(() => {
           timeoutHide = debounce(hide, props.delay);
       })
+      onUpdated(() => {
+          if(menu.value) {
+              [posX, posY] = fitViewport([posX, posY], menu.value)
+          }
+      })
       let timeoutHide = () => {};
       let posX = 0;
       let posY = 0;
@@ -44,7 +49,7 @@ export default defineComponent({
       const filter = ref('');
       const menu = ref<HTMLElement>null;
       const visible = ref(false);
-      const args = ref({});
+      let args = {};
       const style = computed(() => {
           return {
               top: posY+'px',
@@ -78,7 +83,7 @@ export default defineComponent({
           visible.value = true;
           posX = x;
           posY = y;
-          args.value = localArgs;
+          args = localArgs;
 
           cancelHide();
       };
@@ -104,16 +109,14 @@ export default defineComponent({
 
           items.push({ title, onClick });
       };
-      onUpdated(() => {
-          if(menu.value) {
-              [posX, posY] = fitViewport([posX, posY], menu.value)
-          }
-      })
+      const itemClicked = (item) => {
+          if(item.onClick)
+              item.onClick(args);
+      }
       return {
           posX,
           posY,
           visible,
-          args,
           filter,
           items,
           style,
@@ -125,7 +128,8 @@ export default defineComponent({
           hide,
           additem,
           timeoutHide,
-          cancelHide
+          cancelHide,
+          itemClicked
       }
   }
 })
