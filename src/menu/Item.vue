@@ -5,7 +5,7 @@
          class="item"
          :class="{ hasSubitems }">
         {{item.title}}
-        <div class="subitems" v-show="hasSubitems && visibleSubitems">
+        <div v-if="hasSubitems && visibleSubitems" class="subitems">
             <Item v-for="subitem in item.subitems" :key="subitem.title"
                  :item="subitem"
                  :delay="delay"

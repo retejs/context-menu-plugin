@@ -1,5 +1,5 @@
 <template>
-    <div class="context-menu" ref="menu"
+    <div class="context-menu" ref="myRefMenu"
          v-if="visible"
          v-bind:style="style"
          @mouseleave='timeoutHide'
@@ -18,7 +18,7 @@
 </template>
 
 <script>
-import { computed, defineComponent, onMounted, onUpdated, ref } from "vue";
+import { computed, defineComponent, nextTick, onMounted, onUpdated, ref } from "vue";
 import debounce from "../lib/debounce";
 import Item from './Item.vue';
 import Search from './Search.vue';
@@ -38,22 +38,24 @@ export default defineComponent({
           timeoutHide = debounce(hide, props.delay);
       })
       onUpdated(() => {
-          if(menu.value) {
-              [posX, posY] = fitViewport([posX, posY], menu.value)
-          }
+          nextTick(() => {
+              if (myRefMenu.value) {
+                  [posLeft.value, posTop.value] = fitViewport([posLeft.value, posTop.value], myRefMenu.value);
+              }
+          });
       })
       let timeoutHide = () => {};
-      let posX = 0;
-      let posY = 0;
+      let posLeft = ref(0);
+      let posTop = ref(0);
       let items = [];
       const filter = ref('');
-      const menu = ref<HTMLElement>null;
+      const myRefMenu = ref();
       const visible = ref(false);
       let args = {};
       const style = computed(() => {
           return {
-              top: posY+'px',
-              left: posX+'px'
+              '--pos-left': posLeft.value+'px',
+              '--pos-top': posTop.value+'px'
           }
       });
       const filtered = computed(() => {
@@ -81,8 +83,8 @@ export default defineComponent({
       };
       const show = (x, y, localArgs = {}) => {
           visible.value = true;
-          posX = x;
-          posY = y;
+          posLeft.value = x;
+          posTop.value = y;
           args = localArgs;
 
           cancelHide();
@@ -114,14 +116,14 @@ export default defineComponent({
               item.onClick(args);
       }
       return {
-          posX,
-          posY,
+          posLeft,
+          posTop,
           visible,
           filter,
           items,
           style,
           filtered,
-          menu,
+          myRefMenu,
           extractLeafs,
           onSearch,
           show,
@@ -143,8 +145,8 @@ export default defineComponent({
 @import 'src/common';
 
 .context-menu {
-    left: 0;
-    top: 0;
+    left: var(--pos-left, 0);
+    top: var(--pos-top, 0);
     position: fixed;
     padding: 10px;
     width: $width;

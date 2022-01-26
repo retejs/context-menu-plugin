@@ -17,10 +17,11 @@ function install(editor, {
     editor.bind('hidecontextmenu');
     editor.bind('showcontextmenu');
 
-    let menu = null;
+    let mainMenu;
+    let currentMenu;
 
     editor.on('hidecontextmenu', () => {
-        if (menu) menu.hide();
+        if (currentMenu) currentMenu.hide();
     });
 
     editor.on('click contextmenu', () => {
@@ -34,14 +35,18 @@ function install(editor, {
         if (!editor.trigger('showcontextmenu', { e, node })) return;
 
         const [x, y] = [e.clientX, e.clientY];
+        let args;
 
         if(node) {
-            menu = new NodeMenu(editor, { searchBar: false, delay }, vueComponent, typeof nodeItems === 'function' ? nodeItems(node) : nodeItems);
-            menu.show(x, y, { node });
+            currentMenu = new NodeMenu(editor, { searchBar: false, delay }, vueComponent, typeof nodeItems === 'function' ? nodeItems(node) : nodeItems);
+            args = { node };
         } else {
-            menu = new MainMenu(editor, { searchBar, searchKeep, delay }, vueComponent, { items, allocate, rename });
-            menu.show(x, y);
+            if (!mainMenu)
+                mainMenu = new MainMenu(editor, { searchBar, searchKeep, delay }, vueComponent, { items, allocate, rename })
+            currentMenu = mainMenu
+            args = {}
         }
+        currentMenu.show(x, y, args);
     });
 }
 
