@@ -9,7 +9,14 @@ function install(editor, {
     searchKeep = () => false,
     delay = 1000,
     items = {},
-    nodeItems = {},
+    nodeItems = {
+        delete: {
+            title: "Delete",
+        },
+        clone: {
+            title: "Clone"
+        }
+    },
     allocate = () => [],
     rename = component => component.name,
     vueComponent = null
