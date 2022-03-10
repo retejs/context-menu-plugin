@@ -1,6 +1,6 @@
 {
   "name": "rete-context-menu-plugin",
-  "version": "1.0.0-alpha8",
+  "version": "1.0.0-alpha9",
   "description": "Rete context menu plugin\r ====\r #### Rete.js plugin",
   "main": "build/context-menu-plugin.common.js",
   "module": "build/context-menu-plugin.esm.js",
