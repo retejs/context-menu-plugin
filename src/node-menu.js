@@ -21,6 +21,7 @@ export default class NodeMenu extends Menu {
                 const node = await createNode(component, { ...params, x: x + 10, y: y + 10 });
 
                 editor.addNode(node);
+                editor.trigger('nodeCloned', node);
             }
             nodeItems.clone.callback = defaultCloneCallback;
         }
