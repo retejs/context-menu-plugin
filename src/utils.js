@@ -13,14 +13,13 @@ export async function createNode(component, { data = {}, meta = {}, x = 0, y = 0
 }
 
 export function traverse(items, callback, path = []) {
-    if (typeof items !== 'object') return;
-
-    Object.keys(items).map(key => {
-        if (typeof items[key] === 'function')
-            callback(key, items[key], path)
-        else 
-            traverse(items[key], callback, [...path, key])
-    })
+    for (const key in items){
+        const item = items[key];
+        if (typeof item.subitems === 'object')
+            traverse(item.subitems, callback, [...path, key])
+        else
+            callback(item.title, item.callback, path)
+    }
 }
 
 export function fitViewport([x, y], element) {

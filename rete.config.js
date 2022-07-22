@@ -1,5 +1,5 @@
-import pug from 'rollup-plugin-pug';
-import sass from 'rollup-plugin-sass';
+import commonjs from '@rollup/plugin-commonjs';
+import scss from 'rollup-plugin-scss';
 import vue from 'rollup-plugin-vue';
 
 export default {
@@ -7,15 +7,12 @@ export default {
     name: 'ContextMenuPlugin',
     globals: {
         'vue': 'Vue',
-        'lodash-es': '_'
     },
     plugins: [
-        pug({
-            pugRuntime: false
-        }),
-        sass({
+        vue(),
+        scss({
             insert: true
         }),
-        vue()
+        commonjs()
     ]
 }

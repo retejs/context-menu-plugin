@@ -1,73 +1,99 @@
-<template lang="pug">
-.item(
-  @click="onClick($event)"
-  @mouseover="showSubitems()"
-  @mouseleave="timeoutHide()"
-  :class="{ hasSubitems }"
-) {{item.title}}
-  .subitems(v-show="hasSubitems && this.visibleSubitems")
-    Item(v-for="subitem in item.subitems"
-      :key="subitem.title"
-      :item="subitem"
-      :args="args"
-      :delay="delay"
-      )
+<template>
+    <div @click="onClick"
+         @mouseover="showSubitems"
+         @mouseleave="timeoutHide"
+         class="item"
+         :class="{ hasSubitems }">
+        {{item.title}}
+        <div v-if="hasSubitems && visibleSubitems" class="subitems">
+            <Item v-for="subitem in item.subitems" :key="subitem.title"
+                 :item="subitem"
+                 :delay="delay"
+                  @hide="$emit('hide')"
+                  @click="subitemClicked"
+            >
+            </Item>
+        </div>
+    </div>
 </template>
 
 <script>
-import hideMixin from './debounceHide'
+import { computed, defineComponent, ref, onMounted } from "vue";
+import debounce from "../lib/debounce";
 
-export default {
-  name: 'Item',
-  mixins: [hideMixin('hideSubitems')],
-  props: { item: Object, args: Object },
-  data() {
-    return {
-      visibleSubitems: false, 
-    }
+export default defineComponent({
+  props: {
+      item: Object,
+      args: Object,
+      delay: { type: Number, required: true }
   },
-  computed: {
-    hasSubitems() {
-      return this.item.subitems
+  emits: ["hide", "click"],
+  setup(props, { emit }) {
+      onMounted(() => {
+          timeoutHide = debounce(hideSubitems, props.delay);
+      })
+    let timeoutHide = () => {};
+    const visibleSubitems = ref(false);
+    const hasSubitems = computed(() => {
+          return props.item.subitems
+    });
+    const cancelHide = () => {
+          const hide = timeoutHide;
+          if (hide && hide.cancel)
+              timeoutHide.cancel();
     }
-  },
-  methods: {
-    showSubitems() {
-      this.visibleSubitems = true;
-      this.cancelHide();
-    },
-    hideSubitems() {
-      this.visibleSubitems = false;
-    },
-    onClick(e) {
+    const showSubitems = () => {
+          visibleSubitems.value = true;
+          cancelHide();
+      };
+    const hideSubitems = () => {
+          visibleSubitems.value = false;
+    }
+    const onClick = (e) => {
       e.stopPropagation();
-      
-      if(this.item.onClick)
-        this.item.onClick(this.args);
-      this.$root.$emit('hide');
+      emit('click', props.item)
+      emit('hide');
     }
-  }
-}
+
+    const subitemClicked = (subitem) => {
+        emit('click', subitem)
+    }
+
+    return {
+        onClick,
+        showSubitems,
+        timeoutHide,
+        hasSubitems,
+        visibleSubitems,
+        subitemClicked
+    }
+ }
+})
 </script>
 
 
-<style lang="sass" scoped>
-@import '../vars.sass'
-@import '../common.sass'
+<style lang="scss" scoped>
 
-.item
-  @extend .item
-  &.hasSubitems:after
-    content: '►'
-    position: absolute
-    opacity: 0.6
-    right: 5px
-    top: 5px
-  .subitems
-    position: absolute
-    top: 0
-    left: 100%
-    width: $width
-    .subitem
-      @extend .item
+@import 'src/vars';
+@import 'src/common';
+
+.item {
+    @extend .item;
+    &.hasSubitems:after {
+        content: '►';
+        position: absolute;
+        opacity: 0.6;
+        right: 5px;
+        top: 5px;
+    }
+    .subitems {
+        position: absolute;
+        top: 0;
+        left: 100%;
+        width: $width;
+        .subitem {
+            @extend .item;
+        }
+    }
+}
 </style>

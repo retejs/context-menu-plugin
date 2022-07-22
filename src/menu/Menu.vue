@@ -1,130 +1,159 @@
-<template lang="pug">
-.context-menu(
-  ref="menu"
-  v-if="visible"
-  v-bind:style="style",
-  @mouseleave='timeoutHide()',
-  @mouseover="cancelHide()"
-  @contextmenu.prevent=""
-  @wheel.stop=""
-)
-  Search(v-if="searchBar", v-model="filter", @search="onSearch")
-  Item(v-for='item in filtered'
-    :key="item.title"
-    :item="item"
-    :args="args"
-    :delay="delay / 2"
-  )
+<template>
+    <div class="context-menu" ref="myRefMenu"
+         v-if="visible"
+         v-bind:style="style"
+         @mouseleave='timeoutHide'
+         @mouseover="cancelHide"
+         @contextmenu.prevent=""
+         @wheel.stop="">
+        <Search v-if="searchBar" v-model="filter" @search="onSearch"></Search>
+        <Item v-for='item in filtered'
+              :key="item.title"
+              :item="item"
+              :delay="delay / 2"
+              @hide="hide"
+              @click="itemClicked"
+        ></Item>
+    </div>
 </template>
 
 <script>
-import hideMixin from './debounceHide'
+import { computed, defineComponent, nextTick, onMounted, onUpdated, ref } from "vue";
+import debounce from "../lib/debounce";
 import Item from './Item.vue';
 import Search from './Search.vue';
 import { fitViewport } from '../utils';
 
-export default {
-  props: { searchBar: Boolean, searchKeep: Function },
-  mixins: [hideMixin('hide')],
-  data() {
-    return {
-      x: 0,
-      y: 0,
-      visible: false,
-      args: {},
-      filter: '',
-      items: [],
-    }
-  },
-  computed: {
-    style() {
-      return {
-        top: this.y+'px', 
-        left: this.x+'px'
-      }
-    },
-    filtered() {
-      if(!this.filter) return this.items;
-      const regex = new RegExp(this.filter, 'i');
-      
-      return this.extractLeafs(this.items)
-        .filter(({ title }) => {
-          return this.searchKeep(title) || title.match(regex)
-        });
-    }
-  },
-  methods: {
-    extractLeafs(items) {
-      if(!items) return [];
-      let leafs = [];
-      items.map(item => {
-        if(!item.subitems) leafs.push(item)
-
-        leafs.push(...this.extractLeafs(item.subitems))
-      })
-
-      return leafs;
-    },
-    onSearch(e) {
-      this.filter = e;
-    },
-    show(x, y, args = {}) {
-      this.visible = true;
-      this.x = x;
-      this.y = y;
-      this.args = args;
-  
-      this.cancelHide();
-    },
-    hide() {
-      this.visible = false;
-    },
-    additem(title, onClick, path = []) {
-      let items = this.items;
-      for(let level of path) {
-        let exist = items.find(i => i.title === level);
-
-        if(!exist) {
-          exist = { title: level, subitems: [] };
-          items.push(exist)
-        }
-
-        items = exist.subitems || (exist.subitems = []);
-      }
-
-      items.push({ title, onClick });
-    },
-  },
-  updated() {
-    if(this.$refs.menu) {
-      [this.x, this.y] = fitViewport([this.x, this.y], this.$refs.menu)
-    } 
-  },
-  mounted() {
-    this.$root.$on('show', this.show);
-    this.$root.$on('hide', this.hide);
-    this.$root.$on('additem', this.additem);
-  },
+export default defineComponent({
   components: {
-    Item,
-    Search
+        Item, Search
+  },
+  props: {
+      searchBar: {type: Boolean, default: false },
+      searchKeep: {type: Function, default: () => {} },
+      delay: { type: Number, required: true }
+  },
+  setup(props) {
+      onMounted(() => {
+          timeoutHide = debounce(hide, props.delay);
+      })
+      onUpdated(() => {
+          nextTick(() => {
+              if (myRefMenu.value) {
+                  [posLeft.value, posTop.value] = fitViewport([posLeft.value, posTop.value], myRefMenu.value);
+              }
+          });
+      })
+      let timeoutHide = () => {};
+      let posLeft = ref(0);
+      let posTop = ref(0);
+      let items = [];
+      const filter = ref('');
+      const myRefMenu = ref();
+      const visible = ref(false);
+      let args = {};
+      const style = computed(() => {
+          return {
+              '--pos-left': posLeft.value+'px',
+              '--pos-top': posTop.value+'px'
+          }
+      });
+      const filtered = computed(() => {
+          if(!filter.value) return items;
+          const regex = new RegExp(filter.value, 'i');
+
+          return extractLeafs(items)
+              .filter(({ title }) => {
+                  return props.searchKeep(title) || title.match(regex)
+              });
+      });
+      const extractLeafs = (items) => {
+          if(!items) return [];
+          let leafs = [];
+          items.map(item => {
+              if(!item.subitems) leafs.push(item)
+
+              leafs.push(...extractLeafs(item.subitems))
+          })
+
+          return leafs;
+      };
+      const onSearch = (e) => {
+          filter.value = e;
+      };
+      const show = (x, y, localArgs = {}) => {
+          visible.value = true;
+          posLeft.value = x;
+          posTop.value = y;
+          args = localArgs;
+
+          cancelHide();
+      };
+      const hide = () => {
+          visible.value = false;
+      };
+      const cancelHide = () => {
+          const hide = timeoutHide;
+          if (hide && hide.cancel)
+              timeoutHide.cancel();
+      }
+      const additem = (title, onClick, path = []) => {
+          for(let level of path) {
+              let exist = items.find(i => i.title === level);
+
+              if(!exist) {
+                  exist = { title: level, subitems: [] };
+                  items.push(exist)
+              }
+
+              items = exist.subitems || (exist.subitems = []);
+          }
+
+          items.push({ title, onClick });
+      };
+      const itemClicked = (item) => {
+          if(item.onClick)
+              item.onClick(args);
+      }
+      return {
+          posLeft,
+          posTop,
+          visible,
+          filter,
+          items,
+          style,
+          filtered,
+          myRefMenu,
+          extractLeafs,
+          onSearch,
+          show,
+          hide,
+          additem,
+          timeoutHide,
+          cancelHide,
+          itemClicked
+      }
   }
-}
+})
 </script>
 
 
-<style lang="sass" scoped>
-@import '../vars.sass'
-@import '../common.sass'
+<style lang="scss" scoped>
 
-.context-menu
-  left: 0
-  top: 0
-  position: fixed
-  padding: 10px
-  width: $width
-  margin-top: -20px
-  margin-left: -$width/2
-  .search
-    @extend .item
+@use "sass:math";
+@import 'src/vars';
+@import 'src/common';
+
+.context-menu {
+    left: var(--pos-left, 0);
+    top: var(--pos-top, 0);
+    position: fixed;
+    padding: 10px;
+    width: $width;
+    margin-top: -20px;
+    margin-left: -(math.div($width, 2));
+    .search {
+        @extend .item;
+    }
+}
 </style>

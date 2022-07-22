@@ -15,7 +15,7 @@ export default class MainMenu extends Menu {
         for(const component of editor.components.values()) {
             const path = allocate(component);
     
-            if (Array.isArray(path)) { // add to the menu if path is array
+            if (Array.isArray(path)) { // add to the menu if path is an array
                 this.addItem(rename(component), async () => {
                     editor.addNode(await createNode(component, mouse));
                 }, path);
