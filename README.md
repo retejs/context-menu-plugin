@@ -1,6 +1,7 @@
-Rete context menu plugin
+Rete context menu plugin (unstable, for Vue.js v3)
 ====
 #### Rete.js plugin
+##### Check out master branch if you need version for Vue.js v2
 
 ```js
 import ContextMenuPlugin, { Menu, Item, Search } from 'rete-context-menu-plugin';
@@ -30,7 +31,7 @@ editor.use(ContextMenuPlugin, {
                 'Only for Add nodes'() => { console.log('Works for add node!') },
             };
         }
-        return { 
+        return {
             'Click me'(){ console.log('Works for node!') }
         }
     },
@@ -47,7 +48,7 @@ editor.use(ContextMenuPlugin, {
 | `nodeItems` | custom items for Node menu or a function that returns node items | `{}`
 
 
-You can arbitrarily put a component in a submenu. Examples: 
+You can arbitrarily put a component in a submenu. Examples:
 
 ```js
 allocate() { return ["Single submenu"] }
