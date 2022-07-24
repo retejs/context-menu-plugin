@@ -1,9 +1,9 @@
 import { Plugin as RetePlugin } from 'rete/types/core/plugin';
-import { NodeEditor, Node, Component } from 'rete';
+import { Node, Component } from 'rete';
 import Vue from 'vue';
 
 export interface ContextMenuPlugin extends RetePlugin {
-  install: (editor: NodeEditor, options: {
+  install: (editor: unknown, options: {
     searchBar?: boolean,
     searchKeep?: (title: string) => boolean,
     delay?: number,
