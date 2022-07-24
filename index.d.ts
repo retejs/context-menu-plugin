@@ -2,7 +2,7 @@ import { Plugin as RetePlugin } from 'rete/types/core/plugin';
 import { NodeEditor, Node, Component } from 'rete';
 import Vue from 'vue';
 
-export interface HistoryPlugin extends RetePlugin {
+export interface ContextMenuPlugin extends RetePlugin {
   install: (editor: NodeEditor, options: {
     searchBar?: boolean,
     searchKeep?: (title: string) => boolean,
@@ -15,5 +15,5 @@ export interface HistoryPlugin extends RetePlugin {
   }) => void,
 }
 
-declare const _default: HistoryPlugin;
+declare const _default: ContextMenuPlugin;
 export default _default;
