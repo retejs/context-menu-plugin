@@ -98,18 +98,19 @@ export default defineComponent({
               timeoutHide.cancel();
       }
       const additem = (title, onClick, path = []) => {
+          let localItems = items;
           for(let level of path) {
-              let exist = items.find(i => i.title === level);
+              let exist = localItems.find(i => i.title === level);
 
               if(!exist) {
                   exist = { title: level, subitems: [] };
-                  items.push(exist)
+                  localItems.push(exist)
               }
 
-              items = exist.subitems || (exist.subitems = []);
+              localItems = exist.subitems || (exist.subitems = []);
           }
 
-          items.push({ title, onClick });
+          localItems.push({ title, onClick });
       };
       const itemClicked = (item) => {
           if(item.onClick)
