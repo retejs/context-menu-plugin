@@ -46,11 +46,11 @@ export default {
     filtered() {
       if(!this.filter) return this.items;
       const regex = new RegExp(this.filter, 'i');
-      
+
       return this.extractLeafs(this.items)
         .filter(({ title }) => {
           return this.searchKeep(title) || title.match(regex)
-        });
+      });
     }
   },
   methods: {
@@ -73,7 +73,7 @@ export default {
       this.x = x;
       this.y = y;
       this.args = args;
-  
+
       this.cancelHide();
     },
     hide() {
@@ -98,7 +98,7 @@ export default {
   updated() {
     if(this.$refs.menu) {
       [this.x, this.y] = fitViewport([this.x, this.y], this.$refs.menu)
-    } 
+    }
   },
   mounted() {
     this.$root.$on('show', this.show);
@@ -126,5 +126,5 @@ export default {
   margin-top: -20px
   margin-left: -$width/2
   .search
-    @extend .item
+    @extend .rete-context-menu-item
 </style>

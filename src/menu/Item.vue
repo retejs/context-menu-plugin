@@ -1,5 +1,5 @@
 <template lang="pug">
-.item(
+.rete-context-menu-item(
   @click="onClick($event)"
   @mouseover="showSubitems()"
   @mouseleave="timeoutHide()"
@@ -23,7 +23,7 @@ export default {
   props: { item: Object, args: Object },
   data() {
     return {
-      visibleSubitems: false, 
+      visibleSubitems: false,
     }
   },
   computed: {
@@ -41,7 +41,7 @@ export default {
     },
     onClick(e) {
       e.stopPropagation();
-      
+
       if(this.item.onClick)
         this.item.onClick(this.args);
       this.$root.$emit('hide');
@@ -55,8 +55,8 @@ export default {
 @import '../vars.sass'
 @import '../common.sass'
 
-.item
-  @extend .item
+.rete-context-menu-item
+  @extend .rete-context-menu-item
   &.hasSubitems:after
     content: '►'
     position: absolute
@@ -69,5 +69,5 @@ export default {
     left: 100%
     width: $width
     .subitem
-      @extend .item
+      @extend .rete-context-menu-item
 </style>
