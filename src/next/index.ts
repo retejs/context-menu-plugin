@@ -1,15 +1,15 @@
 import { BaseSchemes, CanAssignSignal, Root, Scope } from 'rete'
 import { Area2D, Area2DInherited, AreaPlugin, RenderData } from 'rete-area-plugin'
 
-import { Item, ItemsCollection } from './types'
+import { Item, Items } from './types'
 
 export * as Presets from './presets'
 
 console.log('context menu')
 
-type Props<Schemes extends BaseSchemes> = {
+type Props<Schemes extends BaseSchemes, K> = {
   delay?: number
-  items(context: 'root' | Schemes['Node']): ItemsCollection
+  items: Items<Schemes, K>
 }
 
 export type ContextMenuData = {
@@ -30,7 +30,7 @@ export class ContextMenuPlugin<
   Schemes extends BaseSchemes,
   K
 > extends Scope<never, Area2DInherited<Schemes, Substitute<K, Schemes>>> {
-    constructor(private props: Props<Schemes>) {
+    constructor(private props: Props<Schemes, K>) {
         super('context-menu')
     }
 
@@ -56,7 +56,7 @@ export class ContextMenuPlugin<
                 context.data.event.preventDefault()
                 context.data.event.stopPropagation()
 
-                const { searchBar, list } = this.props.items(context.data.context)
+                const { searchBar, list } = this.props.items(context.data.context, this)
 
                 area.container.appendChild(element)
                 element.style.left = `${context.data.event.clientX}px`
