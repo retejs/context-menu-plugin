@@ -20,10 +20,10 @@
     "vue": "2.5.17"
   },
   "devDependencies": {
-    "rete-cli": "0.5.0",
+    "rete-cli": "0.6.1",
     "rollup-plugin-pug": "0.1.6",
     "rollup-plugin-sass": "0.6.1",
-    "rollup-plugin-vue": "4.3.2",
+    "rollup-plugin-vue": "6.0.0",
     "vue-template-compiler": "2.5.17"
   }
 }
