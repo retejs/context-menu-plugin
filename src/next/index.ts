@@ -22,6 +22,7 @@ export type ContextMenuData = {
 export type ContextMenuExtra<Schemes extends BaseSchemes> =
   | { type: 'unmount', data: { element: HTMLElement } }
   | { type: 'render', data: RenderData<Schemes> | ContextMenuData }
+  | { type: 'rendered', data: RenderData<Schemes> | ContextMenuData }
 
 type IsCompatible<K> = Extract<K, { type: 'render' }> extends { type: 'render', data: infer P } ? CanAssignSignal<P, ContextMenuData> : false // TODO should add type: 'render' ??
 type Substitute<K, Schemes extends BaseSchemes> = IsCompatible<K> extends true ? K : ContextMenuExtra<Schemes>

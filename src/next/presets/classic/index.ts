@@ -8,7 +8,7 @@ type BSchemes = GetSchemes<
   BaseSchemes['Connection']
 >
 
-export function setup<Schemes extends BSchemes, K>(nodes: [string, { new(): any }][]) {
+export function setup<Schemes extends BSchemes, K>(nodes: [string, () => any][]) {
     return <Items<Schemes, K>>(function (context, plugin) {
         const area = plugin.parentScope<AreaPlugin<Schemes, K>>(AreaPlugin)
         const editor = area.parentScope<NodeEditor<Schemes>>(NodeEditor)
@@ -16,12 +16,12 @@ export function setup<Schemes extends BSchemes, K>(nodes: [string, { new(): any 
         if (context === 'root') {
             return {
                 searchBar: true,
-                list: nodes.map(([label, Instance], i) => {
+                list: nodes.map(([label, create], i) => {
                     return {
                         label,
                         key: String(i),
                         async handler() {
-                            const node = new Instance()
+                            const node = create()
 
                             await editor.addNode(node)
                             const pointer = area.area.pointer

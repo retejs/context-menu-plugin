@@ -23,6 +23,6 @@
   "devDependencies": {
     "rete": "file:../rete/rete-2.0.0-beta.1.tgz",
     "rete-area-plugin": "file:../area-plugin/rete-area-plugin-0.2.1.tgz",
-    "rete-cli": "^1.0.0-beta.13"
+    "rete-cli": "^1.0.0-beta.15"
   }
 }
