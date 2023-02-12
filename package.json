@@ -2,9 +2,6 @@
   "name": "rete-context-menu-plugin",
   "version": "2.0.0-beta.1",
   "description": "",
-  "main": "build/context-menu-plugin.common.js",
-  "module": "build/context-menu-plugin.esm.js",
-  "types": "types",
   "scripts": {
     "build": "rete build -c rete.config.ts",
     "build:dev": "rete build -c rete.config.ts --watch",
@@ -17,12 +14,12 @@
     "url": "https://github.com/retejs/context-menu-plugin.git"
   },
   "peerDependencies": {
-    "rete": "file:../rete/rete-2.0.0-beta.1.tgz",
-    "rete-area-plugin": "file:../area-plugin/rete-area-plugin-0.2.1.tgz"
+    "rete": "file:../rete/dist/package.tgz",
+    "rete-area-plugin": "file:../area-plugin/dist/package.tgz"
   },
   "devDependencies": {
-    "rete": "file:../rete/rete-2.0.0-beta.1.tgz",
-    "rete-area-plugin": "file:../area-plugin/rete-area-plugin-0.2.1.tgz",
-    "rete-cli": "^1.0.0-beta.15"
+    "rete": "file:../rete/dist/package.tgz",
+    "rete-area-plugin": "file:../area-plugin/dist/package.tgz",
+    "rete-cli": "^1.0.0-beta.18"
   }
 }
