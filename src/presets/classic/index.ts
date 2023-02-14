@@ -9,67 +9,67 @@ type BSchemes = GetSchemes<
 >
 
 export function setup<Schemes extends BSchemes, K>(nodes: [string, () => any][]) {
-    return <Items<Schemes, K>>(function (context, plugin) {
-        const area = plugin.parentScope<AreaPlugin<Schemes, K>>(AreaPlugin)
-        const editor = area.parentScope<NodeEditor<Schemes>>(NodeEditor)
+  return <Items<Schemes, K>>(function (context, plugin) {
+    const area = plugin.parentScope<AreaPlugin<Schemes, K>>(AreaPlugin)
+    const editor = area.parentScope<NodeEditor<Schemes>>(NodeEditor)
 
-        if (context === 'root') {
-            return {
-                searchBar: true,
-                list: nodes.map(([label, create], i) => {
-                    return {
-                        label,
-                        key: String(i),
-                        async handler() {
-                            const node = create()
-
-                            await editor.addNode(node)
-                            const pointer = area.area.pointer
-
-                            area.nodeViews.get(node.id)?.translate(pointer.x, pointer.y)
-                        }
-                    }
-                })
-            }
-        }
-
-        const deleteItem: Item = {
-            label: 'Delete',
-            key: 'delete',
+    if (context === 'root') {
+      return {
+        searchBar: true,
+        list: nodes.map(([label, create], i) => {
+          return {
+            label,
+            key: String(i),
             async handler() {
-                const nodeId = context.id
-                const connections = editor.getConnections().filter(c => {
-                    return c.source === nodeId || c.target === nodeId
-                })
+              const node = create()
 
-                for (const connection of connections) {
-                    await editor.removeConnection(connection.id)
-                }
-                await editor.removeNode(nodeId)
+              await editor.addNode(node)
+              const pointer = area.area.pointer
+
+              area.nodeViews.get(node.id)?.translate(pointer.x, pointer.y)
             }
+          }
+        })
+      }
+    }
+
+    const deleteItem: Item = {
+      label: 'Delete',
+      key: 'delete',
+      async handler() {
+        const nodeId = context.id
+        const connections = editor.getConnections().filter(c => {
+          return c.source === nodeId || c.target === nodeId
+        })
+
+        for (const connection of connections) {
+          await editor.removeConnection(connection.id)
         }
+        await editor.removeNode(nodeId)
+      }
+    }
 
-        const clone = context.clone
-        const cloneItem: undefined | Item = clone && {
-            label: 'Clone',
-            key: 'clone',
-            async handler() {
-                const node = clone()
+    const clone = context.clone
+    const cloneItem: undefined | Item = clone && {
+      label: 'Clone',
+      key: 'clone',
+      async handler() {
+        const node = clone()
 
-                await editor.addNode(node)
+        await editor.addNode(node)
 
-                const pointer = area.area.pointer
+        const pointer = area.area.pointer
 
-                area.nodeViews.get(node.id)?.translate(pointer.x, pointer.y)
-            }
-        }
+        area.nodeViews.get(node.id)?.translate(pointer.x, pointer.y)
+      }
+    }
 
-        return {
-            searchBar: false,
-            list: [
-                deleteItem,
-                ...(cloneItem ? [cloneItem] : [])
-            ]
-        }
-    })
+    return {
+      searchBar: false,
+      list: [
+        deleteItem,
+        ...(cloneItem ? [cloneItem] : [])
+      ]
+    }
+  })
 }
