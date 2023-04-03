@@ -1,100 +1,24 @@
-Rete context menu plugin (for Vue.js v2)
+Rete.js Context menu plugin
 ====
-#### Rete.js plugin
-#### Check out [vue3 branch](https://github.com/retejs/context-menu-plugin/tree/vue3) if you need version for Vue.js v3
+[![Made in Ukraine](https://img.shields.io/badge/made_in-ukraine-ffd700.svg?labelColor=0057b7)](https://stand-with-ukraine.pp.ua)
+[![Discord](https://img.shields.io/discord/1081223198055604244?color=%237289da&label=Discord)](https://discord.gg/cxSFkPZdsV)
 
+**Rete.js plugin**
 
-```js
-import ContextMenuPlugin, { Menu, Item, Search } from 'rete-context-menu-plugin';
+## Key features
 
-editor.use(ContextMenuPlugin, {
-    searchBar: false, // true by default
-    searchKeep: title => true, // leave item when searching, optional. For example, title => ['Refresh'].includes(title)
-    delay: 100,
-    allocate(component) {
-        return ['Submenu'];
-    },
-    rename(component) {
-        return component.name;
-    },
-    items: {
-        'Click me'(){ console.log('Works!') }
-    },
-    nodeItems: {
-        'Click me'(){ console.log('Works for node!') },
-        'Delete': false, // don't show Delete item
-        'Clone': false // or Clone item
-    },
-    // OR
-    nodeItems: node => {
-        if (node.name === 'Add') {
-            return {
-                'Only for Add nodes'() => { console.log('Works for add node!') },
-            };
-        }
-        return {
-            'Click me'(){ console.log('Works for node!') }
-        }
-    },
-    vueComponent: CustomVueComponent // extends Menu
-});
-```
-| Options | Description | Default |
-|-|-|-|
-| `searchBar` | Showing search bar | `true`
-| `delay` | Delay hide, ms | `1000`
-| `allocate` | function for placing of components into submenu | `() => []`
-| `rename` | function for renaming of items| `component => component.name`
-| `items` | custom items (`Object` with nested objects and functions) | `{}`
-| `nodeItems` | custom items for Node menu or a function that returns node items | `{}`
+- **Context menu**: enables the opening of a context menu for the area and nodes
+- **Presets**: predefined configuration for context menu content
+  - **Classic**: provides list of nodes for the area and Delete/Clone items for individual nodes
 
+## Getting Started
 
-You can arbitrarily put a component in a submenu. Examples:
+Please refer to the [guide](https://retejs.org/docs/guides/context-menu) and [example](https://retejs.org/examples/context-menu) using this plugin
 
-```js
-allocate() { return ["Single submenu"] }
-```
+## Contribution
 
-```js
-allocate(component) { return component.path } // where path is a stack of menu for every component
-```
+Please refer to the [Contribution](https://retejs.org/docs/contribution) guide
 
+## License
 
-```js
-allocate(component) { return null } // exclude component from menu items
-```
-
-To change the items that create nodes, you may need to change the name.
-
-```js
-class MyComponent {
-    constructor() {
-        super("My comp");
-        this.contextMenuName = "Add My comp";
-    }
-}
-///
-rename(component) { return component.contextMenuName || component.name }
-```
-
-Prevent showing context menu
-
-```js
-editor.on('showcontextmenu', ({ e, node }) => { // e - MouseEvent, node - Node instance or null
-    return Boolean(node); // show context menu for nodes only
-});
-```
-Prevent context menu for particular Node
-
-```js
-class AddComponent extends Rete.Component {
-    constructor(){
-        // ...
-        this.data.noContextMenu = true;
-    }
-// ...
-
-editor.on('showcontextmenu', ({ node }) => {
-    return !node || !editor.components.get(node.name).data.noContextMenu;
-});
-```
+[MIT](https://github.com/retejs/context-menu-plugin/blob/master/LICENSE)
