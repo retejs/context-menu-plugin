@@ -1,6 +1,6 @@
 {
   "name": "rete-context-menu-plugin",
-  "version": "2.0.0-beta.4",
+  "version": "2.0.0-beta.5",
   "description": "",
   "scripts": {
     "build": "rete build -c rete.config.ts",
