@@ -7,8 +7,9 @@ type BSchemes = GetSchemes<
   BaseSchemes['Node'] & { clone?: () => BaseSchemes['Node']},
   BaseSchemes['Connection']
 >
+type NodeFactory<Schemes extends BSchemes> = () => Schemes['Node'] | Promise<Schemes['Node']>
 
-export function setup<Schemes extends BSchemes, K>(nodes: [string, () => any][]) {
+export function setup<Schemes extends BSchemes, K>(nodes: [string, NodeFactory<Schemes>][]) {
   return <Items<Schemes, K>>(function (context, plugin) {
     const area = plugin.parentScope<AreaPlugin<Schemes, K>>(AreaPlugin)
     const editor = area.parentScope<NodeEditor<Schemes>>(NodeEditor)
@@ -21,7 +22,7 @@ export function setup<Schemes extends BSchemes, K>(nodes: [string, () => any][])
             label,
             key: String(i),
             async handler() {
-              const node = create()
+              const node = await create()
 
               await editor.addNode(node)
               const pointer = area.area.pointer
