@@ -2,6 +2,8 @@ import { BaseSchemes } from 'rete'
 
 import { ContextMenuPlugin } from '.'
 
+export type Position = { x: number, y: number }
+
 export type Item = {
   label: string
   key: string
@@ -14,7 +16,7 @@ export type ItemsCollection = {
   list: Item[]
 }
 
-export type Items<Schemes extends BaseSchemes, K> = (
+export type Items<Schemes extends BaseSchemes> = (
   context: 'root' | Schemes['Node'],
-  plugin: ContextMenuPlugin<Schemes, K>
+  plugin: ContextMenuPlugin<Schemes>
 ) => ItemsCollection

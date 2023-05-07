@@ -1,39 +1,33 @@
-import { BaseSchemes, CanAssignSignal, Root, Scope } from 'rete'
-import { Area2D, Area2DInherited, AreaPlugin, RenderData } from 'rete-area-plugin'
+import { BaseSchemes, Scope } from 'rete'
+import { AreaPlugin, RenderSignal } from 'rete-area-plugin'
 
-import { Item, Items } from './types'
+import { Item, Items, Position } from './types'
 
 export * as Presets from './presets'
 
-type Props<Schemes extends BaseSchemes, K> = {
+type Props<Schemes extends BaseSchemes> = {
   delay?: number
-  items: Items<Schemes, K>
+  items: Items<Schemes>
 }
 
-export type ContextMenuData = {
-  type: 'contextmenu'
-  element: HTMLElement
-  items: Item[]
-  onHide(): void
-  searchBar?: boolean
-}
-export type ContextMenuExtra<Schemes extends BaseSchemes> =
-  | { type: 'unmount', data: { element: HTMLElement } }
-  | { type: 'render', data: RenderData<Schemes> | ContextMenuData }
-  | { type: 'rendered', data: RenderData<Schemes> | ContextMenuData }
+export type ContextMenuExtra =
+  | RenderSignal<'contextmenu', {
+    items: Item[]
+    onHide(): void
+    searchBar?: boolean
+  }>
 
-type IsCompatible<K> = Extract<K, { type: 'render' }> extends { type: 'render', data: infer P } ? CanAssignSignal<P, ContextMenuData> : false // TODO should add type: 'render' ??
-type Substitute<K, Schemes extends BaseSchemes> = IsCompatible<K> extends true ? K : ContextMenuExtra<Schemes>
+type Requires<Schemes extends BaseSchemes> =
+  | { type: 'contextmenu', data: { event: MouseEvent, context: 'root' | Schemes['Node'] | Schemes['Connection'] } }
+  | { type: 'unmount', data: { element: HTMLElement }}
+  | { type: 'pointerdown', data: { position: Position, event: PointerEvent }}
 
-export class ContextMenuPlugin<
-  Schemes extends BaseSchemes,
-  K
-> extends Scope<never, Area2DInherited<Schemes, Substitute<K, Schemes>>> {
-  constructor(private props: Props<Schemes, K>) {
+export class ContextMenuPlugin<Schemes extends BaseSchemes> extends Scope<never, [Requires<Schemes> | ContextMenuExtra]> {
+  constructor(private props: Props<Schemes>) {
     super('context-menu')
   }
 
-  setParent(scope: Scope<Substitute<K, Schemes> | Area2D<Schemes>, [Root<Schemes>]>): void {
+  setParent(scope: Scope<Requires<Schemes>>): void {
     super.setParent(scope)
 
     const area = this.parentScope<AreaPlugin<Schemes>>(AreaPlugin)
@@ -44,9 +38,9 @@ export class ContextMenuPlugin<
 
     // eslint-disable-next-line max-statements
     this.addPipe(context => {
-      const parent = this.parentScope() as any as Scope<ContextMenuExtra<Schemes>>
+      const parent = this.parentScope()
 
-      if (!('type' in context)) return context
+      if (!context || typeof context !== 'object' || !('type' in context)) return context
       if (context.type === 'unmount') {
         if (context.data.element === element) {
           element.style.display = 'none'

@@ -10,7 +10,7 @@ type BSchemes = GetSchemes<
 type NodeFactory<Schemes extends BSchemes> = () => Schemes['Node'] | Promise<Schemes['Node']>
 
 export function setup<Schemes extends BSchemes, K>(nodes: [string, NodeFactory<Schemes>][]) {
-  return <Items<Schemes, K>>(function (context, plugin) {
+  return <Items<Schemes>>(function (context, plugin) {
     const area = plugin.parentScope<AreaPlugin<Schemes, K>>(AreaPlugin)
     const editor = area.parentScope<NodeEditor<Schemes>>(NodeEditor)
 
