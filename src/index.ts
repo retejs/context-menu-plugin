@@ -1,5 +1,5 @@
 import { BaseSchemes, Scope } from 'rete'
-import { AreaPlugin, RenderSignal } from 'rete-area-plugin'
+import { BaseArea, BaseAreaPlugin, RenderSignal } from 'rete-area-plugin'
 
 import { Item, Items, Position } from './types'
 
@@ -9,6 +9,7 @@ type Props<Schemes extends BaseSchemes> = {
   delay?: number
   items: Items<Schemes>
 }
+export type RenderMeta = { filled?: boolean }
 
 export type ContextMenuExtra =
   | RenderSignal<'contextmenu', {
@@ -19,8 +20,8 @@ export type ContextMenuExtra =
 
 type Requires<Schemes extends BaseSchemes> =
   | { type: 'contextmenu', data: { event: MouseEvent, context: 'root' | Schemes['Node'] | Schemes['Connection'] } }
-  | { type: 'unmount', data: { element: HTMLElement }}
-  | { type: 'pointerdown', data: { position: Position, event: PointerEvent }}
+  | { type: 'unmount', data: { element: HTMLElement } }
+  | { type: 'pointerdown', data: { position: Position, event: PointerEvent } }
 
 export class ContextMenuPlugin<Schemes extends BaseSchemes> extends Scope<never, [Requires<Schemes> | ContextMenuExtra]> {
   constructor(private props: Props<Schemes>) {
@@ -30,7 +31,11 @@ export class ContextMenuPlugin<Schemes extends BaseSchemes> extends Scope<never,
   setParent(scope: Scope<Requires<Schemes>>): void {
     super.setParent(scope)
 
-    const area = this.parentScope<AreaPlugin<Schemes>>(AreaPlugin)
+    const area = this.parentScope<BaseAreaPlugin<Schemes, BaseArea<Schemes>>>(BaseAreaPlugin)
+    const container: HTMLElement = (area as any).container
+
+    if (!container || !(container instanceof HTMLElement)) throw new Error('container expected')
+
     const element = document.createElement('div')
 
     element.style.display = 'none'
@@ -51,7 +56,7 @@ export class ContextMenuPlugin<Schemes extends BaseSchemes> extends Scope<never,
 
         const { searchBar, list } = this.props.items(context.data.context, this)
 
-        area.container.appendChild(element)
+        container.appendChild(element)
         element.style.left = `${context.data.event.clientX}px`
         element.style.top = `${context.data.event.clientY}px`
         element.style.display = ''
