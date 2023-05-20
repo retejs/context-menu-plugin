@@ -1,3 +1,15 @@
+## v2.0.0-beta.9
+
+Support subitems
+
+```ts
+Presets.classic.setup([
+  ["Math", [
+    ["Number", () => new NumberNode()],
+  ]]
+])
+```
+
 ## v2.0.0-beta.7
 
 Breaking changes:
