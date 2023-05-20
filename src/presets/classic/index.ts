@@ -1,37 +1,19 @@
-import { BaseSchemes, GetSchemes, NodeEditor, Scope } from 'rete'
+import { NodeEditor } from 'rete'
+import { BaseAreaPlugin } from 'rete-area-plugin'
 
 import { Item, Items } from '../../types'
+import { createItem } from './factory'
+import { BSchemes, ItemDefinition } from './types'
 
-type BSchemes = GetSchemes<
-  BaseSchemes['Node'] & { clone?: () => BaseSchemes['Node'] },
-  BaseSchemes['Connection']
->
-type NodeFactory<Schemes extends BSchemes> = () => Schemes['Node'] | Promise<Schemes['Node']>
-
-export function setup<Schemes extends BSchemes>(nodes: [string, NodeFactory<Schemes>][]) {
+export function setup<Schemes extends BSchemes>(nodes: ItemDefinition<Schemes>[]) {
   return <Items<Schemes>>(function (context, plugin) {
-    const area = plugin.parentScope() as Scope<any> & {
-      translate(nodeId: string, position: any): void
-      area: { pointer: any }
-    }
+    const area = plugin.parentScope<BaseAreaPlugin<Schemes, any>>(BaseAreaPlugin)
     const editor = area.parentScope<NodeEditor<Schemes>>(NodeEditor)
 
     if (context === 'root') {
       return {
         searchBar: true,
-        list: nodes.map(([label, create], i) => {
-          return {
-            label,
-            key: String(i),
-            async handler() {
-              const node = await create()
-
-              await editor.addNode(node)
-
-              area.translate(node.id, area.area.pointer)
-            }
-          }
-        })
+        list: nodes.map((item, i) => createItem(item, i, { editor, area }))
       }
     }
 
