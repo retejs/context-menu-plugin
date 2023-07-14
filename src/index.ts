@@ -5,12 +5,22 @@ import { Item, Items, Position } from './types'
 
 export * as Presets from './presets'
 
-type Props<Schemes extends BaseSchemes> = {
+/**
+ * Context menu plugin props
+ * @priority 8
+ */
+export type Props<Schemes extends BaseSchemes> = {
+  /** delay before hiding context menu */
   delay?: number
+  /** menu items, can be produced by preset */
   items: Items<Schemes>
 }
 export type RenderMeta = { filled?: boolean }
 
+/**
+ * Signal types produced by ContextMenuPlugin instance
+ * @priority 10
+ */
 export type ContextMenuExtra =
   | RenderSignal<'contextmenu', {
     items: Item[]
@@ -23,7 +33,20 @@ type Requires<Schemes extends BaseSchemes> =
   | { type: 'unmount', data: { element: HTMLElement } }
   | { type: 'pointerdown', data: { position: Position, event: PointerEvent } }
 
+/**
+ * Plugin for context menu.
+ * Responsible for initialing rendering of context menu with predefined items.
+ * @priority 9
+ * @emits render
+ * @emits unmount
+ * @listens unmount
+ * @listens contextmenu
+ * @listens pointerdown
+ */
 export class ContextMenuPlugin<Schemes extends BaseSchemes> extends Scope<never, [Requires<Schemes> | ContextMenuExtra]> {
+  /**
+   * @param props Properties
+   */
   constructor(private props: Props<Schemes>) {
     super('context-menu')
   }
