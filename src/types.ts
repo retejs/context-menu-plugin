@@ -4,6 +4,9 @@ import { ContextMenuPlugin } from '.'
 
 export type Position = { x: number, y: number }
 
+/**
+ * Item type of context menu
+ */
 export type Item = {
   label: string
   key: string

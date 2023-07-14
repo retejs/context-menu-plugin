@@ -5,6 +5,16 @@ import { Item, Items } from '../../types'
 import { createItem } from './factory'
 import { BSchemes, ItemDefinition } from './types'
 
+/**
+ * Classic context menu preset.
+ * Configures nodes/actions items for root and Delete/Clone items for nodes
+ * @param nodes List of items
+ * @example Presets.classic.setup([
+  ["Math", [
+    ["Number", () => new NumberNode()],
+  ]]
+])
+ */
 export function setup<Schemes extends BSchemes>(nodes: ItemDefinition<Schemes>[]) {
   return <Items<Schemes>>(function (context, plugin) {
     const area = plugin.parentScope<BaseAreaPlugin<Schemes, any>>(BaseAreaPlugin)
