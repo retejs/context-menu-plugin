@@ -1,3 +1,10 @@
+## [2.0.1](https://github.com/retejs/context-menu-plugin/compare/v2.0.0...v2.0.1) (2024-01-27)
+
+
+### Bug Fixes
+
+* **build:** source maps ([9da0654](https://github.com/retejs/context-menu-plugin/commit/9da065467ffb9d32aa7a974027e2e688c723aebb))
+
 ## v2.0.0-beta.9
 
 Support subitems
