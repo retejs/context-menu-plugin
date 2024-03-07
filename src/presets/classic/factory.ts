@@ -28,6 +28,7 @@ export function createItem<S extends BSchemes>(
   }
   return <Item>{
     ...item,
+    handler() {/* do nothing */},
     subitems: factory.map((data, i) => createItem(data, i, context))
   }
 }
