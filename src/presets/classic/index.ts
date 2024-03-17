@@ -31,15 +31,23 @@ export function setup<Schemes extends BSchemes>(nodes: ItemDefinition<Schemes>[]
       label: 'Delete',
       key: 'delete',
       async handler() {
-        const nodeId = context.id
-        const connections = editor.getConnections().filter(c => {
-          return c.source === nodeId || c.target === nodeId
-        })
+        if ('source' in context && 'target' in context) {
+          // connection
+          const connectionId = context.id
 
-        for (const connection of connections) {
-          await editor.removeConnection(connection.id)
+          await editor.removeConnection(connectionId)
+        } else {
+          // node
+          const nodeId = context.id
+          const connections = editor.getConnections().filter(c => {
+            return c.source === nodeId || c.target === nodeId
+          })
+
+          for (const connection of connections) {
+            await editor.removeConnection(connection.id)
+          }
+          await editor.removeNode(nodeId)
         }
-        await editor.removeNode(nodeId)
       }
     }
 
