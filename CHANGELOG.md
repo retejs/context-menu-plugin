@@ -1,3 +1,10 @@
+## [2.0.3](https://github.com/retejs/context-menu-plugin/compare/v2.0.2...v2.0.3) (2024-04-17)
+
+
+### Bug Fixes
+
+* delete connection error ([8cf887d](https://github.com/retejs/context-menu-plugin/commit/8cf887d91f85b0a1ccd643fc5931b544b68952ca))
+
 ## [2.0.2](https://github.com/retejs/context-menu-plugin/compare/v2.0.1...v2.0.2) (2024-03-07)
 
 
