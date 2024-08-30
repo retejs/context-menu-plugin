@@ -1,3 +1,10 @@
+## [2.0.4](https://github.com/retejs/context-menu-plugin/compare/v2.0.3...v2.0.4) (2024-08-30)
+
+
+### Bug Fixes
+
+* update cli and fix linting errors ([e5447be](https://github.com/retejs/context-menu-plugin/commit/e5447beb1d97b43f0ad52d6846460cbc96b27d7d))
+
 ## [2.0.3](https://github.com/retejs/context-menu-plugin/compare/v2.0.2...v2.0.3) (2024-04-17)
 
 
