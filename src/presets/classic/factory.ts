@@ -9,26 +9,29 @@ export function createItem<S extends BSchemes>(
   key: string | number,
   context: { editor: NodeEditor<S>, area: BaseAreaPlugin<S, any> }
 ): Item {
-  const item = {
+  const item: Item = {
     label,
-    key: String(key)
+    key: String(key),
+    handler() {
+      /* noop */
+    }
   }
 
   if (typeof factory === 'function') {
-    return <Item>{
+    return {
       ...item,
       async handler() {
         const node = await factory()
 
         await context.editor.addNode(node)
 
-        context.area.translate(node.id, context.area.area.pointer)
+        void context.area.translate(node.id, context.area.area.pointer)
       }
-    }
+    } satisfies Item
   }
-  return <Item>{
+  return {
     ...item,
-    handler() {/* do nothing */},
+    handler() { /* do nothing */ },
     subitems: factory.map((data, i) => createItem(data, i, context))
-  }
+  } satisfies Item
 }

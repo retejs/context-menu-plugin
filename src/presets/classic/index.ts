@@ -10,13 +10,13 @@ import { BSchemes, ItemDefinition } from './types'
  * Configures nodes/actions items for root and Delete/Clone items for nodes
  * @param nodes List of items
  * @example Presets.classic.setup([
-  ["Math", [
-    ["Number", () => new NumberNode()],
-  ]]
-])
+ *  ["Math", [
+ *    ["Number", () => new NumberNode()],
+ *  ]]
+ *])
  */
 export function setup<Schemes extends BSchemes>(nodes: ItemDefinition<Schemes>[]) {
-  return <Items<Schemes>>(function (context, plugin) {
+  return function (context, plugin) {
     const area = plugin.parentScope<BaseAreaPlugin<Schemes, any>>(BaseAreaPlugin)
     const editor = area.parentScope<NodeEditor<Schemes>>(NodeEditor)
 
@@ -60,7 +60,7 @@ export function setup<Schemes extends BSchemes>(nodes: ItemDefinition<Schemes>[]
 
         await editor.addNode(node)
 
-        area.translate(node.id, area.area.pointer)
+        void area.translate(node.id, area.area.pointer)
       }
     }
 
@@ -68,8 +68,10 @@ export function setup<Schemes extends BSchemes>(nodes: ItemDefinition<Schemes>[]
       searchBar: false,
       list: [
         deleteItem,
-        ...(cloneItem ? [cloneItem] : [])
+        ...cloneItem
+          ? [cloneItem]
+          : []
       ]
     }
-  })
+  } satisfies Items<Schemes>
 }

@@ -84,21 +84,21 @@ export class ContextMenuPlugin<Schemes extends BaseSchemes> extends Scope<never,
         element.style.top = `${context.data.event.clientY}px`
         element.style.display = ''
 
-        parent.emit({
+        void parent.emit({
           type: 'render',
           data: {
             type: 'contextmenu',
             element,
             searchBar,
             onHide() {
-              parent.emit({ type: 'unmount', data: { element } })
+              void parent.emit({ type: 'unmount', data: { element } })
             },
             items: list
           }
         })
       } else if (context.type === 'pointerdown') {
         if (!context.data.event.composedPath().includes(element)) {
-          parent.emit({ type: 'unmount', data: { element } })
+          void parent.emit({ type: 'unmount', data: { element } })
         }
       }
       return context

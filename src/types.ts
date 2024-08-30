@@ -10,12 +10,12 @@ export type Position = { x: number, y: number }
 export type Item = {
   label: string
   key: string
-  handler(): void
+  handler(): void | Promise<void>
   subitems?: Item[]
 }
 
 export type ItemsCollection = {
-  searchBar?: boolean,
+  searchBar?: boolean
   list: Item[]
 }
 
