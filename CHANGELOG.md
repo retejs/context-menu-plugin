@@ -1,3 +1,10 @@
+## [2.0.5](https://github.com/retejs/context-menu-plugin/compare/v2.0.4...v2.0.5) (2025-02-23)
+
+
+### Bug Fixes
+
+* deprecate delay option ([0891d55](https://github.com/retejs/context-menu-plugin/commit/0891d55976d5d3afee755ceee615c3a0f92cbe8f))
+
 ## [2.0.4](https://github.com/retejs/context-menu-plugin/compare/v2.0.3...v2.0.4) (2024-08-30)
 
 
