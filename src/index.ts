@@ -10,7 +10,10 @@ export * as Presets from './presets'
  * @priority 8
  */
 export type Props<Schemes extends BaseSchemes> = {
-  /** delay before hiding context menu */
+  /**
+   * delay before hiding context menu
+   * @deprecated Use the `delay` option of the rendering plugin preset.
+   */
   delay?: number
   /** menu items, can be produced by preset */
   items: Items<Schemes>
