@@ -51,7 +51,7 @@ export function setup<Schemes extends BSchemes>(nodes: ItemDefinition<Schemes>[]
       }
     }
 
-    const clone = context.clone
+    const clone = context.clone?.bind(context)
     const cloneItem: undefined | Item = clone && {
       label: 'Clone',
       key: 'clone',
