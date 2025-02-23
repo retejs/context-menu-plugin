@@ -1,3 +1,10 @@
+## [2.0.6](https://github.com/retejs/context-menu-plugin/compare/v2.0.5...v2.0.6) (2025-02-23)
+
+
+### Bug Fixes
+
+* **classic:** clone method ([12c2542](https://github.com/retejs/context-menu-plugin/commit/12c2542b459f46404b24b0e4853a8c1917c4ca7c))
+
 ## [2.0.5](https://github.com/retejs/context-menu-plugin/compare/v2.0.4...v2.0.5) (2025-02-23)
 
 
